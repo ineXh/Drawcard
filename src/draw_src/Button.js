@@ -17,15 +17,17 @@ Button.prototype = {
 	pressed: function(){
 		if(mouseX > this.pos.x - this.r && mouseX < this.pos.x + this.r
 		&& mouseY > this.pos.y - this.r && mouseY < this.pos.y + this.r){
-			//console.log('pressed')
+			console.log('pressed')
 			return true
 		}
 		return false
 	},
 	display: function(){
-		if(!this.img) return;
-		noTint();
-		imageMode(CENTER);
-		image(this.img, this.pos.x, this.pos.y, this.r*2, this.r*2);
+		//fill(255,0,0)
+		fill(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255))
+		ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
+		//noTint();
+		//imageMode(CENTER);
+		//image(this.img, this.pos.x, this.pos.y, this.r*2, this.r*2);
 	}
 } // end Button

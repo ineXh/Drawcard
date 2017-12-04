@@ -1,7 +1,34 @@
 //var scribble = new Scribble();              // global mode
 var boundaries = [];
+var testButton;
 
+function exportImg(){
+  var canvas = document.getElementById('defaultCanvas0');
+  canvas.toBlob(function(blob) {
+    newImg = document.createElement('img'),
+    url = URL.createObjectURL(blob);
 
+    newImg.onload = function() {
+      // no longer need to read the blob so it's revoked
+      //URL.revokeObjectURL(url);
+    };
+
+    newImg.src = url;
+    document.body.appendChild(newImg);
+  });
+}
+var sendMsg = function(){
+    webViewBridge.send(
+        'sayHi',
+        {mydata: 'test data'}, 
+        function(){
+            //writeParagraph('success')
+            //console.log('success')
+        },
+        function(){
+          //console.log('error')
+        });
+}
 function preload() {
   loadAssets();
   //img.loadPixels()
@@ -15,6 +42,12 @@ function setup() {
   frameRate(fr);
   refresh();
   imgScale = 1.2;//height/img.height
+  text("word", width/2, height/2);
+  testButton = new Button()
+  testButton.init(width*0.8, height*0.8, width/20)
+  testButton.display()
+  //fill(255,0,0)
+  //ellipse(width*0.8, height*0.8, width/20*2, width/20*2);
   //image(img, 0, 0);// img.width*imgScale, height);
   //image(img, 0, 0, img.width*imgScale, img.height*imgScale);
   /*var clr = img.get(256, 406);
@@ -285,6 +318,10 @@ function mouseMoved() {
 }
 function touchEnded(){
   mouseReleased()
+  if(testButton.pressed()){
+    testButton.display()
+    sendMsg()
+  }
 }
 function mouseReleased() {
   released = true;

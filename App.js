@@ -19,6 +19,7 @@ import {
 
 import IntroCard from './src/IntroCard';
 import WebCard from './src/WebCard';
+import ChatHeads from './src/ChatHeads';
 
 const instructions = Platform.select({
   ios: '',
@@ -87,6 +88,10 @@ export default class App extends Component<{}> {
           onPress={this.onButtonPress.bind(this, WebCard, undefined)}>
           <Text style={styles.button}>WebCard</Text>
         </TouchableOpacity> 
+        <TouchableOpacity style={styles.menuItem}
+          onPress={this.onButtonPress.bind(this, ChatHeads)}>
+          <Text style={styles.button}>ChatHeads</Text>
+        </TouchableOpacity>
       </View>
     );
   } // end renderContent
@@ -115,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 50,
+    paddingTop: 0,
     paddingLeft: 0,
     backgroundColor: '#1979ff',
   },
