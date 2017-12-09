@@ -14,17 +14,20 @@ import Interactable from 'react-native-interactable';
 
 const Screen = {
   width: Dimensions.get('window').width,
-  height: Dimensions.get('window').height - 75
+  height: Dimensions.get('window').height-50
 }
 
+const airport = require('./../assets/airport-photo.jpg')
 window.myvar = 123
 const HTMLC = '<div id="myContent">Your HTML content 12</div>'
 const jsCode = "document.querySelector('#myContent').style.backgroundColor = '#7294cc';"
-export default class WebCard extends Component {
+export default class DrawCard extends Component {
   constructor(props) {
     super(props);
     this._deltaY = new Animated.Value(Screen.height-100);
-    this.state = {number: myvar};
+    this.state = {number: myvar, showImg: true,
+      img: airport
+    };
 
     // Toggle the state every second
     /*this.myInterval = setInterval(() => {
@@ -39,8 +42,15 @@ export default class WebCard extends Component {
     this.setState({number: myvar++})
   }
 
-  sayHi(){
-    console.log('Hi from WebCard')
+  sayHi(input){
+    console.log('Hi from DrawCard')
+    //console.log(input.data.mydata)
+    imageUri = "data:image/png;base64," + input.data.mydata;
+    uri = {uri: imageUri}
+    this.setState({showImg: true,//!this.state.showImg,
+      //img:  imageUri//input.data.mydata
+    })
+    //{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}
     return 'return from Hi'
   }
 
@@ -63,7 +73,7 @@ export default class WebCard extends Component {
        }
       
        // invoke target function
-       //console.log(msgData.data)
+       console.log(msgData.data)
        //console.log(msgData.targetFunc)
        const response = this[msgData.targetFunc].apply(this, [msgData]);
        //console.log(response)
@@ -76,7 +86,7 @@ export default class WebCard extends Component {
   }
 
   render() {
-    console.log('render WebCard')
+    console.log('render DrawCard')
     //ref={webview => { this.myWebView = webview; }}
     //ref={(ref) => { this.myWebView = ref; }}
     //ref="myWebView"
@@ -89,8 +99,10 @@ export default class WebCard extends Component {
           source={require('./draw.html')}
           //source= {{html: HTMLC}}
           injectedJavaScript={code}
+          javaScriptEnabled={true}
           javaScriptEnabledAndroid={true}
-          style={{marginTop: 20}}
+          scrollEnabled={false}
+          style={{marginTop: 0}}
           onMessage={this.onWebViewMessage.bind(this)}/>
         
         <View style={styles.panelContainer} pointerEvents={'box-none'}>
@@ -106,7 +118,7 @@ export default class WebCard extends Component {
           }]} />
           <Interactable.View
             verticalOnly={true}
-            snapPoints={[{y: Screen.height/2}, {y: Screen.height+5}]}
+            snapPoints={[{y: Screen.height/4}, {y: Screen.height+5}]}
             boundaries={{top: -300}}
             initialPosition={{y: Screen.height+5}}
             animatedValueY={this._deltaY}>
@@ -122,11 +134,18 @@ export default class WebCard extends Component {
               <View style={styles.panelButton}>
                 <Text style={styles.panelButtonTitle}>Search Nearby</Text>
               </View>
+              {this.renderPhoto()}               
             </View>
           </Interactable.View>
         </View>
       </View>
     );
+  } // end render
+  renderPhoto(){
+    if(this.state.showImg)
+      return(
+        <Image style={styles.photo} source={this.state.img} />
+      )
   }
 }
 /*

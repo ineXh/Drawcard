@@ -18,8 +18,9 @@ import {
 } from 'react-native';
 
 import IntroCard from './src/IntroCard';
-import WebCard from './src/WebCard';
+import DrawCard from './src/DrawCard';
 import ChatHeads from './src/ChatHeads';
+import FetchCard from './src/FetchCard';
 
 const instructions = Platform.select({
   ios: '',
@@ -85,12 +86,16 @@ export default class App extends Component<{}> {
           <Text style={styles.button}>IntroCard Chris</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem} 
-          onPress={this.onButtonPress.bind(this, WebCard, undefined)}>
-          <Text style={styles.button}>WebCard</Text>
+          onPress={this.onButtonPress.bind(this, DrawCard, undefined)}>
+          <Text style={styles.button}>DrawCard</Text>
         </TouchableOpacity> 
         <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, ChatHeads)}>
           <Text style={styles.button}>ChatHeads</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}
+          onPress={this.onButtonPress.bind(this, FetchCard)}>
+          <Text style={styles.button}>FetchCard</Text>
         </TouchableOpacity>
       </View>
     );

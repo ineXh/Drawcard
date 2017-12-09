@@ -1,7 +1,7 @@
 //var scribble = new Scribble();              // global mode
 var boundaries = [];
 var testButton;
-
+var url;
 function exportImg(){
   var canvas = document.getElementById('defaultCanvas0');
   canvas.toBlob(function(blob) {
@@ -11,19 +11,24 @@ function exportImg(){
     newImg.onload = function() {
       // no longer need to read the blob so it's revoked
       //URL.revokeObjectURL(url);
+      sendMsg(url)
     };
 
     newImg.src = url;
-    document.body.appendChild(newImg);
+    //document.body.appendChild(newImg);
   });
 }
-var sendMsg = function(){
+var sendMsg = function(data){
     webViewBridge.send(
         'sayHi',
-        {mydata: 'test data'}, 
+        {mydata: data}, //'test data'
         function(){
             //writeParagraph('success')
             //console.log('success')
+            background(255, 204, 0);
+            fill(0)
+            text("clear", width/2, height/2);
+            testButton.display()
         },
         function(){
           //console.log('error')
@@ -320,7 +325,8 @@ function touchEnded(){
   mouseReleased()
   if(testButton.pressed()){
     testButton.display()
-    sendMsg()
+    exportImg()
+    //sendMsg()
   }
 }
 function mouseReleased() {
