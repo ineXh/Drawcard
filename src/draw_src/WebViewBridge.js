@@ -92,7 +92,7 @@ Document deletes message callbacks
                promiseChain = promiseChain.then(function () {
                    return new Promise(function (resolve, reject) {
                        console.log("sending message " + msgObj.targetFunc);
-
+                       //background(200, 204, 0);
                        promises[msgObj.msgId] = {resolve: resolve, reject: reject};
                        callbacks[msgObj.msgId] = {
                            onsuccess: success,

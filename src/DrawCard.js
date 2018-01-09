@@ -18,6 +18,7 @@ const Screen = {
 }
 
 const airport = require('./../assets/airport-photo.jpg')
+//const imgLink = require('http://cdn.osxdaily.com/wp-content/uploads/2015/05/howto-page-up-page-down-mac-keyboard-300x292.jpg')
 window.myvar = 123
 const HTMLC = '<div id="myContent">Your HTML content 12</div>'
 const jsCode = "document.querySelector('#myContent').style.backgroundColor = '#7294cc';"
@@ -25,8 +26,13 @@ export default class DrawCard extends Component {
   constructor(props) {
     super(props);
     this._deltaY = new Animated.Value(Screen.height-100);
-    this.state = {number: myvar, showImg: true,
-      img: airport
+    this.state = {
+      number: myvar, 
+      showImg: false,
+      img: airport,
+      photos: [],
+      drawings: [],
+      index: null,
     };
 
     // Toggle the state every second
@@ -45,12 +51,17 @@ export default class DrawCard extends Component {
   sayHi(input){
     console.log('Hi from DrawCard')
     //console.log(input.data.mydata)
-    imageUri = "data:image/png;base64," + input.data.mydata;
-    uri = {uri: imageUri}
-    this.setState({showImg: true,//!this.state.showImg,
+    //imageUri = "data:image/png;base64," + input.data.mydata;
+    //uri = {uri: imageUri}
+    //this.setState({showImg: true,//!this.state.showImg,
       //img:  imageUri//input.data.mydata
-    })
+    //})
     //{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}
+    //var source={uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg=='};
+    //this.state.drawings.push(source);
+    var source = {uri: input.data.mydata};
+    this.state.drawings.push(source);
+    this.setState({number: myvar++})
     return 'return from Hi'
   }
 
@@ -73,7 +84,7 @@ export default class DrawCard extends Component {
        }
       
        // invoke target function
-       console.log(msgData.data)
+       //console.log(msgData.data)
        //console.log(msgData.targetFunc)
        const response = this[msgData.targetFunc].apply(this, [msgData]);
        //console.log(response)
@@ -118,9 +129,9 @@ export default class DrawCard extends Component {
           }]} />
           <Interactable.View
             verticalOnly={true}
-            snapPoints={[{y: Screen.height/4}, {y: Screen.height+5}]}
+            snapPoints={[{y: Screen.height/4}, {y: Screen.height-25}]}
             boundaries={{top: -300}}
-            initialPosition={{y: Screen.height+5}}
+            initialPosition={{y: Screen.height-25}}
             animatedValueY={this._deltaY}>
             <View style={styles.panel}>
               <View style={styles.panelHeader}>
@@ -134,7 +145,17 @@ export default class DrawCard extends Component {
               <View style={styles.panelButton}>
                 <Text style={styles.panelButtonTitle}>Search Nearby</Text>
               </View>
-              {this.renderPhoto()}               
+              <Image
+                style={{width: 50, height: 50}}
+                source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
+              />
+              {
+                this.state.drawings.map((d, index) =>{
+                  return(
+                      <Image style={styles.photo} key={index} source={d} />
+                    )
+                })
+              }
             </View>
           </Interactable.View>
         </View>
@@ -143,14 +164,27 @@ export default class DrawCard extends Component {
   } // end render
   renderPhoto(){
     if(this.state.showImg)
+      //console.log(this.state.img)
       return(
         <Image style={styles.photo} source={this.state.img} />
       )
   }
+  renderDrawings(){
+    var img = this.state.img;
+    //this.state.drawings.map((d, index) =>{
+      //console.log('renderDrawings ' + index)
+      //console.log(d)
+      return(
+          <Image style={styles.photo} source={img} />
+          
+        )
+    //})
+  }
 }
 /*
         */
-
+// {this.renderDrawings()}   
+// <Image style={styles.photo} key={index} source={d} />
 
 const styles = StyleSheet.create({
   container: {

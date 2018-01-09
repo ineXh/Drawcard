@@ -3,8 +3,10 @@ var boundaries = [];
 var testButton;
 var url;
 function exportImg(){
+  centerText("exportImg")
   var canvas = document.getElementById('defaultCanvas0');
-  canvas.toBlob(function(blob) {
+  //centerText(canvas)
+  /*canvas.toBlob(function(blob) {
     newImg = document.createElement('img'),
     url = URL.createObjectURL(blob);
 
@@ -16,9 +18,13 @@ function exportImg(){
 
     newImg.src = url;
     //document.body.appendChild(newImg);
-  });
+  });*/
+  var dataURL = canvas.toDataURL('image/jpeg', 1.0);
+  //centerText(dataURL)
+  sendMsg(dataURL)
 }
 var sendMsg = function(data){
+  centerText("send Msg")
     webViewBridge.send(
         'sayHi',
         {mydata: data}, //'test data'
@@ -27,8 +33,17 @@ var sendMsg = function(data){
             //console.log('success')
             background(255, 204, 0);
             fill(0)
-            text("clear", width/2, height/2);
+            centerText("receive back")
             testButton.display()
+            //image(img, 200, 200, img.elt.width, img.elt.height);
+            /*var c = document.getElementById("defaultCanvas0");
+            var ctx = c.getContext("2d");
+            var img = new Image();
+            img.onload = function() { ctx.drawImage(img, 0, 0); };
+            img.src = 'https://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png';*/
+            var imgData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+            img = loadImage(imgData);
+            image(img, 200, 100,30,30);
         },
         function(){
           //console.log('error')
@@ -36,7 +51,21 @@ var sendMsg = function(data){
 }
 function preload() {
   loadAssets();
+  const URL = 'http:/' + '/www.Clker.com/cliparts/9/0/f/5/'
+            + '1194986802274589086football_ball_brice_boye_01.svg.med.png';
+            //http://www.Clker.com/cliparts/9/0/f/5/1194986802274589086football_ball_brice_boye_01.svg.med.png
+            //"https://facebook.github.io/react-native/docs/assets/favicon.png"
+  //img = loadImage(URL);
   //img.loadPixels()
+
+}
+function centerText(t){
+  fill(color(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255)));
+  rectMode(CENTER);
+  rect(width/2, height/2, width/2.5, height/20);
+  fill(255);
+  textAlign(CENTER);
+  text(t, width/2, height/2);
 }
 var imgScale;
 function setup() {
@@ -47,10 +76,19 @@ function setup() {
   frameRate(fr);
   refresh();
   imgScale = 1.2;//height/img.height
-  text("word", width/2, height/2);
+  background(255);
+  centerText("setup")
   testButton = new Button()
   testButton.init(width*0.8, height*0.8, width/20)
   testButton.display()
+  /*var c = document.getElementById("defaultCanvas0");
+  var ctx = c.getContext("2d");
+  var img = new Image();
+  img.onload = function() { ctx.drawImage(img, 0, 0); };
+  //img.src = 'https://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png';*/
+  //img = loadImage('https://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png');
+
+  //image(img, 0, 0, img.elt.width, img.elt.height);
   //fill(255,0,0)
   //ellipse(width*0.8, height*0.8, width/20*2, width/20*2);
   //image(img, 0, 0);// img.width*imgScale, height);
