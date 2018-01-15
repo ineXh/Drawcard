@@ -145,6 +145,10 @@ Document deletes message callbacks
                }
                delete callbacks[message.msgId];
            }
+          // Target Function
+          if(message.targetFunc){
+            window[message.targetFunc].apply(this, [message.targetFuncData]);
+          }
 
        });
    };

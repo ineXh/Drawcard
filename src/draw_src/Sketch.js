@@ -3,9 +3,9 @@ var boundaries = [];
 var testButton;
 var url;
 function exportImg(){
-  centerText("exportImg")
+  centerText("exportImg", width/2, height/2);
   var canvas = document.getElementById('defaultCanvas0');
-  //centerText(canvas)
+  //centerText(canvas, width/2, height/2);
   /*canvas.toBlob(function(blob) {
     newImg = document.createElement('img'),
     url = URL.createObjectURL(blob);
@@ -20,11 +20,21 @@ function exportImg(){
     //document.body.appendChild(newImg);
   });*/
   var dataURL = canvas.toDataURL('image/jpeg', 1.0);
-  //centerText(dataURL)
+  //centerText(dataURL, width/2, height/2);
   sendMsg(dataURL)
 }
+var clearImage = function(input){
+  background(color(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255)));
+  centerText("run clearImage", width/2, height/2);
+  centerText(input, width/2, height*0.25);
+}
+var showImage = function(input){
+  background(color(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255)));
+  var img1 = loadImage("./../assets/bunny.png");
+  image(img1, 200, 100,30,30);
+}
 var sendMsg = function(data){
-  centerText("send Msg")
+  centerText("send Msg", width/2, height/2);
     webViewBridge.send(
         'sayHi',
         {mydata: data}, //'test data'
@@ -33,7 +43,7 @@ var sendMsg = function(data){
             //console.log('success')
             background(255, 204, 0);
             fill(0)
-            centerText("receive back")
+            centerText("receive back", width/2, height/2);
             testButton.display()
             //image(img, 200, 200, img.elt.width, img.elt.height);
             /*var c = document.getElementById("defaultCanvas0");
@@ -56,16 +66,17 @@ function preload() {
             //http://www.Clker.com/cliparts/9/0/f/5/1194986802274589086football_ball_brice_boye_01.svg.med.png
             //"https://facebook.github.io/react-native/docs/assets/favicon.png"
   //img = loadImage(URL);
+  //img = loadImage("./../assets/bunny.png")
   //img.loadPixels()
 
 }
-function centerText(t){
+function centerText(t, x, y){
   fill(color(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255)));
   rectMode(CENTER);
-  rect(width/2, height/2, width/2.5, height/20);
+  rect(x, y, width/2.5, height/20);
   fill(255);
   textAlign(CENTER);
-  text(t, width/2, height/2);
+  text(t, x, y);
 }
 var imgScale;
 function setup() {
@@ -77,10 +88,11 @@ function setup() {
   refresh();
   imgScale = 1.2;//height/img.height
   background(255);
-  centerText("setup")
+  centerText("setup", width/2, height/2);
   testButton = new Button()
   testButton.init(width*0.8, height*0.8, width/20)
   testButton.display()
+  //image(img, 200, 200);
   /*var c = document.getElementById("defaultCanvas0");
   var ctx = c.getContext("2d");
   var img = new Image();

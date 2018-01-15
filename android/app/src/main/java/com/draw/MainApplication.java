@@ -3,6 +3,7 @@ package com.draw;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import cl.json.RNSharePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.wix.interactable.Interactable;
 import com.facebook.react.ReactNativeHost;
@@ -12,6 +13,8 @@ import com.facebook.soloader.SoLoader;
 
 import java.util.Arrays;
 import java.util.List;
+
+import cl.json.RNSharePackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -25,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSharePackage(),
             new RNFetchBlobPackage(),
             new Interactable()
       );

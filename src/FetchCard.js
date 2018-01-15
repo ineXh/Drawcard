@@ -10,9 +10,11 @@ import {
   Dimensions,
   Button,
   ScrollView,
-  View
+  View,
+  RefreshControl
 } from 'react-native';
 
+import Share from 'react-native-share';
 import RNFetchBlob from 'react-native-fetch-blob'
 const { width } = Dimensions.get('window')
 
@@ -42,20 +44,28 @@ export default class IntroCard extends Component {
   }
 
   share = () => {
-    /*const image = this.state.photos[this.state.index].node.image.uri
+    console.log('share')
+    const image = this.state.photos[this.state.index].node.image.uri
+    //console.log(image)
     RNFetchBlob.fs.readFile(image, 'base64')
     .then((data) => {
       let shareOptions = {
         title: "React Native Share Example",
         message: "Check out this photo!",
-        url: `data:image/jpg;base64,${data}`,
+        url: 'data:image/jpg;base64,${data}',
         subject: "Check out this photo!"
       };
 
       Share.open(shareOptions)
         .then((res) => console.log('res:', res))
-        .catch(err => console.log('err', err))
-    })*/
+        .catch(err => {
+                        console.log('err', err);
+                        //console.log(shareOptions);
+                      })
+    })
+  }
+  draw = () => {
+    console.log('draw')
   }
 
   render() {
@@ -109,6 +119,10 @@ export default class IntroCard extends Component {
                   <Button
                       title='Share'
                       onPress={this.share}
+                    />
+                    <Button
+                      title='Draw'
+                      onPress={this.draw}
                     />
                 </View>
               )

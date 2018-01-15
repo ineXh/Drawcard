@@ -35,19 +35,25 @@ export default class DrawCard extends Component {
       index: null,
     };
 
-    // Toggle the state every second
-    /*this.myInterval = setInterval(() => {
-      this.setState(previousState => {
-        return { number: previousState.number+1 };
-      });
-    }, 1000);*/
   } // end constructor
 
   componentWillUnmount(){
-    //clearInterval(this.myInterval);
     this.setState({number: myvar++})
   }
-
+  onPress(name) {
+    //alert(`Button ${name} pressed`);
+    let msgData = {};
+    msgData.targetFunc = "clearImage"
+    msgData.targetFuncData = "input data 101"
+    this.myWebView.postMessage(JSON.stringify(msgData))
+  }
+  showPress(name) {
+    //alert(`Button ${name} pressed`);
+    let msgData = {};
+    msgData.targetFunc = "showImage"
+    msgData.targetFuncData = "input data 101"
+    this.myWebView.postMessage(JSON.stringify(msgData))
+  }
   sayHi(input){
     console.log('Hi from DrawCard')
     //console.log(input.data.mydata)
@@ -87,6 +93,7 @@ export default class DrawCard extends Component {
        //console.log(msgData.data)
        //console.log(msgData.targetFunc)
        const response = this[msgData.targetFunc].apply(this, [msgData]);
+       msgData.targetFunc = null;
        //console.log(response)
        // trigger success callback
        msgData.isSuccessful = true;
@@ -137,13 +144,16 @@ export default class DrawCard extends Component {
               <View style={styles.panelHeader}>
                 <View style={styles.panelHandle} />
               </View>
-              <Text style={styles.panelTitle}>San Francisco Airport</Text>
-              <Text style={styles.panelSubtitle}>International Airport - 10 miles away</Text>
+              <Text style={styles.panelTitle}>Slider</Text>
               <View style={styles.panelButton}>
-                <Text style={styles.panelButtonTitle}>Directions</Text>
+                <TouchableOpacity onPress={this.onPress.bind(this, 'button1')}>
+                  <Text style={styles.panelButtonTitle}>Clear Image</Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.panelButton}>
-                <Text style={styles.panelButtonTitle}>Search Nearby</Text>
+                <TouchableOpacity onPress={this.showPress.bind(this, 'button2')}>
+                  <Text style={styles.panelButtonTitle}>Show Image</Text>
+                </TouchableOpacity>
               </View>
               <Image
                 style={{width: 50, height: 50}}
