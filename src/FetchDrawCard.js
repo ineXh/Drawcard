@@ -74,11 +74,6 @@ export default class FetchDrawCard extends Component {
     this.setState({showSketch: true})
   }
   render() {
-    return(
-      {this.showSketch? this.renderSketch() : this.renderMenu()}
-    );
-  } // end render
-  renderMenu() {
     return (
       <View style={styles.container}>
         <Button
@@ -88,36 +83,10 @@ export default class FetchDrawCard extends Component {
         <Text style={styles.welcome}>
           Welcome to React Native Fetch!
         </Text>
-        <Modal
-          animationType={"slide"}
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => console.log('closed')}
-        >
-          <View style={styles.modalContainer}>
-            <Button
-              title='Close'
-              onPress={this.toggleModal}
-            />
-            <ScrollView
-              contentContainerStyle={styles.scrollView}>
-              {this.renderPhotos()}
-            </ScrollView>
-            {
-              this.state.showDrawButton && (
-                <View style={styles.shareButton}>
-                    <Button
-                      title='Draw'
-                      onPress={this.draw}
-                    />
-                </View>
-              )
-            }
-          </View>
-        </Modal>
+        {this.renderSketch()}
       </View>
     );
-  } // end renderMenu
+  } // end render
   renderSketch(){
     return(
       <View style={{flex: 1}}>
@@ -162,7 +131,35 @@ export default class FetchDrawCard extends Component {
 
 } // end FetchDrawCard
 
-/**/
+/*
+<Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => console.log('closed')}
+        >
+          <View style={styles.modalContainer}>
+            <Button
+              title='Close'
+              onPress={this.toggleModal}
+            />
+            <ScrollView
+              contentContainerStyle={styles.scrollView}>
+              {this.renderPhotos()}
+            </ScrollView>
+            {
+              this.state.showDrawButton && (
+                <View style={styles.shareButton}>
+                    <Button
+                      title='Draw'
+                      onPress={this.draw}
+                    />
+                </View>
+              )
+            }
+          </View>
+        </Modal>
+*/
 
 const styles = StyleSheet.create({
   container: {
