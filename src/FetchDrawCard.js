@@ -75,7 +75,11 @@ export default class FetchDrawCard extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
+        <Button
+          title='View Photos'
+          onPress={() => { this.toggleModal(); this.getPhotos() }}
+        />
         {this.renderSketch()}
       </View>
     );
@@ -118,10 +122,7 @@ export default class FetchDrawCard extends Component {
 } // end FetchDrawCard
 
 /*
-<Button
-          title='View Photos'
-          onPress={() => { this.toggleModal(); this.getPhotos() }}
-        />
+
         <Text style={styles.welcome}>
           Welcome to React Native Fetch!
         </Text>
