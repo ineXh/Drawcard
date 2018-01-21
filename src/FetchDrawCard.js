@@ -121,8 +121,6 @@ export default class FetchDrawCard extends Component {
             style={{flex: 1}}
             ref={webview => { this.myWebView = webview; }}
             source={require('./drawSimple.html')}
-            //source= {{html: HTMLC}}
-            injectedJavaScript={code}
             javaScriptEnabled={true}
             javaScriptEnabledAndroid={true}
             scrollEnabled={false}
