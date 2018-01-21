@@ -74,26 +74,67 @@ export default class FetchDrawCard extends Component {
     this.setState({showSketch: true})
   }
   render() {
+    return(
+      {this.showSketch? this.renderSketch() : this.renderMenu()}
+    );
+  } // end render
+  renderMenu() {
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.container}>
         <Button
           title='View Photos'
           onPress={() => { this.toggleModal(); this.getPhotos() }}
         />
-        {this.renderSketch()}
+        <Text style={styles.welcome}>
+          Welcome to React Native Fetch!
+        </Text>
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => console.log('closed')}
+        >
+          <View style={styles.modalContainer}>
+            <Button
+              title='Close'
+              onPress={this.toggleModal}
+            />
+            <ScrollView
+              contentContainerStyle={styles.scrollView}>
+              {this.renderPhotos()}
+            </ScrollView>
+            {
+              this.state.showDrawButton && (
+                <View style={styles.shareButton}>
+                    <Button
+                      title='Draw'
+                      onPress={this.draw}
+                    />
+                </View>
+              )
+            }
+          </View>
+        </Modal>
       </View>
     );
-  } // end render
+  } // end renderMenu
   renderSketch(){
     return(
-      <WebView
-            style={{flex: 1}}
-            ref={webview => { this.myWebView = webview; }}
-            source={require('./drawSimple.html')}
-            javaScriptEnabled={true}
-            javaScriptEnabledAndroid={true}
-            scrollEnabled={false}
-            onMessage={this.onWebViewMessage.bind(this)}/>
+      <View style={{flex: 1}}>
+        <WebView
+              style={{flex: 1}}
+              ref={webview => { this.myWebView = webview; }}
+              source={require('./drawSimple.html')}
+              javaScriptEnabled={true}
+              javaScriptEnabledAndroid={true}
+              scrollEnabled={false}
+              onMessage={this.onWebViewMessage.bind(this)}/>
+        <View style={styles.shareButton}>
+                    <Button
+                      title='Draw'
+                      onPress={this.draw}
+                    /></View>
+      </View>
     );
   } // end renderSketch
   renderPhotos(){
@@ -121,41 +162,7 @@ export default class FetchDrawCard extends Component {
 
 } // end FetchDrawCard
 
-/*
-
-        <Text style={styles.welcome}>
-          Welcome to React Native Fetch!
-        </Text>
-        <Modal
-          animationType={"slide"}
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => console.log('closed')}
-        >
-          <View style={styles.modalContainer}>
-            <Button
-              title='Close'
-              onPress={this.toggleModal}
-            />
-            <ScrollView
-              contentContainerStyle={styles.scrollView}>
-              {
-                this.state.showSketch ? this.renderSketch() : this.renderPhotos()
-              }
-            </ScrollView>
-            {
-              this.state.showDrawButton && (
-                <View style={styles.shareButton}>
-                    <Button
-                      title='Draw'
-                      onPress={this.draw}
-                    />
-                </View>
-              )
-            }
-          </View>
-        </Modal>
-        */
+/**/
 
 const styles = StyleSheet.create({
   container: {
