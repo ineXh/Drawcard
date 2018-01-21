@@ -97,7 +97,7 @@ export default class FetchDrawCard extends Component {
             <ScrollView
               contentContainerStyle={styles.scrollView}>
               {
-                this.renderPhotos()
+                this.state.showSketch ? this.renderSketch() : this.renderPhotos()
               }
             </ScrollView>
             {
@@ -115,21 +115,21 @@ export default class FetchDrawCard extends Component {
       </View>
     );
   } // end render
-  renderDraw(){
+  renderSketch(){
     return(
       <WebView
             style={{flex: 1}}
             ref={webview => { this.myWebView = webview; }}
-            source={require('./draw.html')}
+            source={require('./drawSimple.html')}
             //source= {{html: HTMLC}}
             injectedJavaScript={code}
             javaScriptEnabled={true}
             javaScriptEnabledAndroid={true}
             scrollEnabled={false}
             style={{marginTop: 0}}
-            onMessage={this.onWebViewMessage.bind(this)}/></WebView>
+            onMessage={this.onWebViewMessage.bind(this)}/>
     );
-  } // end renderDraw
+  } // end renderSketch
   renderPhotos(){
     return(
       this.state.photos.map((p, i) => {
@@ -146,7 +146,7 @@ export default class FetchDrawCard extends Component {
                 height: width/3
               }}
               source={{uri: p.node.image.uri}}
-            /></Image>
+            />
           </TouchableHighlight>
         )
       }) // end photos.map
