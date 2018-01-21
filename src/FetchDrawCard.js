@@ -76,7 +76,49 @@ export default class FetchDrawCard extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button
+        {this.renderSketch()}
+      </View>
+    );
+  } // end render
+  renderSketch(){
+    return(
+      <WebView
+            style={{flex: 1}}
+            ref={webview => { this.myWebView = webview; }}
+            source={require('./drawSimple.html')}
+            javaScriptEnabled={true}
+            javaScriptEnabledAndroid={true}
+            scrollEnabled={false}
+            onMessage={this.onWebViewMessage.bind(this)}/>
+    );
+  } // end renderSketch
+  renderPhotos(){
+    return(
+      this.state.photos.map((p, i) => {
+        return (
+          <TouchableHighlight
+            style={{opacity: i === this.state.index ? 0.5 : 1, backgroundColor: '#de6d77'}}
+            key={i}
+            underlayColor='transparent'
+            onPress={() => this.setIndex(i)}
+          >
+            <Image
+              style={{
+                width: width/3,
+                height: width/3
+              }}
+              source={{uri: p.node.image.uri}}
+            />
+          </TouchableHighlight>
+        )
+      }) // end photos.map
+    );
+  } // end renderPhotos
+
+} // end FetchDrawCard
+
+/*
+<Button
           title='View Photos'
           onPress={() => { this.toggleModal(); this.getPhotos() }}
         />
@@ -112,46 +154,7 @@ export default class FetchDrawCard extends Component {
             }
           </View>
         </Modal>
-      </View>
-    );
-  } // end render
-  renderSketch(){
-    return(
-      <WebView
-            style={{flex: 1}}
-            ref={webview => { this.myWebView = webview; }}
-            source={require('./drawSimple.html')}
-            javaScriptEnabled={true}
-            javaScriptEnabledAndroid={true}
-            scrollEnabled={false}
-            style={{marginTop: 0}}
-            onMessage={this.onWebViewMessage.bind(this)}/>
-    );
-  } // end renderSketch
-  renderPhotos(){
-    return(
-      this.state.photos.map((p, i) => {
-        return (
-          <TouchableHighlight
-            style={{opacity: i === this.state.index ? 0.5 : 1, backgroundColor: '#de6d77'}}
-            key={i}
-            underlayColor='transparent'
-            onPress={() => this.setIndex(i)}
-          >
-            <Image
-              style={{
-                width: width/3,
-                height: width/3
-              }}
-              source={{uri: p.node.image.uri}}
-            />
-          </TouchableHighlight>
-        )
-      }) // end photos.map
-    );
-  } // end renderPhotos
-
-} // end FetchDrawCard
+        */
 
 const styles = StyleSheet.create({
   container: {
