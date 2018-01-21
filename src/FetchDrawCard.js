@@ -18,18 +18,19 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'react-native-fetch-blob'
 const { width } = Dimensions.get('window')
 
-export default class FetchCard extends Component {
+export default class FetchDrawCard extends Component {
   state = {
     modalVisible: false,
     photos: [],
     index: null,
-    showShare: false,
+    showDrawButton: false,
+    showSketch: false,
   }
   setIndex = (index) => {
     if (index === this.state.index) {
       index = null
     }
-    this.setState({ index, showShare: true})
+    this.setState({ index, showDrawButton: true})
   }
   getPhotos = () => {
     CameraRoll.getPhotos({
@@ -66,8 +67,30 @@ export default class FetchCard extends Component {
   }
   draw = () => {
     console.log('draw')
+    this.setState({showSketch: true})
   }
-
+  renderPhotos(){
+    return(
+      this.state.photos.map((p, i) => {
+        return (
+          <TouchableHighlight
+            style={{opacity: i === this.state.index ? 0.5 : 1, backgroundColor: '#de6d77'}}
+            key={i}
+            underlayColor='transparent'
+            onPress={() => this.setIndex(i)}
+          >
+            <Image
+              style={{
+                width: width/3,
+                height: width/3
+              }}
+              source={{uri: p.node.image.uri}}
+            />
+          </TouchableHighlight>
+        )
+      }) // end photos.map
+    );
+  } // end renderPhotos
   render() {
     return (
       <View style={styles.container}>
@@ -75,7 +98,6 @@ export default class FetchCard extends Component {
           title='View Photos'
           onPress={() => { this.toggleModal(); this.getPhotos() }}
         />
-
         <Text style={styles.welcome}>
           Welcome to React Native Fetch!
         </Text>
@@ -93,33 +115,12 @@ export default class FetchCard extends Component {
             <ScrollView
               contentContainerStyle={styles.scrollView}>
               {
-                this.state.photos.map((p, i) => {
-                  return (
-                    <TouchableHighlight
-                      style={{opacity: i === this.state.index ? 0.5 : 1, backgroundColor: '#de6d77'}}
-                      key={i}
-                      underlayColor='transparent'
-                      onPress={() => this.setIndex(i)}
-                    >
-                      <Image
-                        style={{
-                          width: width/3,
-                          height: width/3
-                        }}
-                        source={{uri: p.node.image.uri}}
-                      />
-                    </TouchableHighlight>
-                  )
-                })
+                this.renderPhotos()
               }
             </ScrollView>
             {
-              this.state.showShare && (
+              this.state.showDrawButton && (
                 <View style={styles.shareButton}>
-                  <Button
-                      title='Share'
-                      onPress={this.share}
-                    />
                     <Button
                       title='Draw'
                       onPress={this.draw}
@@ -131,8 +132,8 @@ export default class FetchCard extends Component {
         </Modal>
       </View>
     );
-  }
-}
+  } // end render
+} // end FetchDrawCard
 
 const styles = StyleSheet.create({
   container: {

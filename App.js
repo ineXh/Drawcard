@@ -21,6 +21,7 @@ import IntroCard from './src/IntroCard';
 import DrawCard from './src/DrawCard';
 import ChatHeads from './src/ChatHeads';
 import FetchCard from './src/FetchCard';
+import FetchDrawCard from './src/FetchDrawCard';
 
 const instructions = Platform.select({
   ios: '',
@@ -58,7 +59,7 @@ export default class App extends Component<{}> {
           <Text style={styles.headerTitle}>Draw</Text>
         </View>*/
     return (
-      <View style={styles.container}>        
+      <View style={styles.container}>
         <View style={styles.body}>
           {this.renderContent()}
         </View>
@@ -77,18 +78,18 @@ export default class App extends Component<{}> {
     // No Card, render Card List
     return (
       <View style={styles.menuContainer}>
-      <TouchableOpacity style={styles.menuItem} 
+      <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, IntroCard, {name: 'Bob'})}>
           <Text style={styles.button2}>IntroCard Bob</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} 
+        <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, IntroCard, {name: 'Chris'})}>
           <Text style={styles.button}>IntroCard Chris</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} 
+        <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, DrawCard, undefined)}>
           <Text style={styles.button}>DrawCard</Text>
-        </TouchableOpacity> 
+        </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, ChatHeads)}>
           <Text style={styles.button}>ChatHeads</Text>
@@ -96,6 +97,10 @@ export default class App extends Component<{}> {
         <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, FetchCard)}>
           <Text style={styles.button}>FetchCard</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}
+          onPress={this.onButtonPress.bind(this, FetchDrawCard)}>
+          <Text style={styles.button}>FetchDrawCard</Text>
         </TouchableOpacity>
       </View>
     );
