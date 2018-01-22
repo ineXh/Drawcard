@@ -137,11 +137,12 @@ Document deletes message callbacks
            if (message.args && callbacks[message.msgId]) {
                if (message.isSuccessful) {
                    //writeParagraph('message is Successful')
-                   callbacks[message.msgId].onsuccess.apply(message.args);
+                   console.log('callback ' + message.args)
+                   callbacks[message.msgId].onsuccess.apply(null, message.args);
                }
                else {
                   //writeParagraph('message error')
-                   callbacks[message.msgId].onerror.apply(message.args);
+                   callbacks[message.msgId].onerror.apply(null, message.args);
                }
                delete callbacks[message.msgId];
            }

@@ -34,7 +34,7 @@ export default class FetchDrawCard extends Component {
     }
     this.setState({ index, showDrawButton: true})
   }
-  onWebViewMessage= () => {
+  onWebViewMessage(event) {
     console.log('onWebViewMessage')
     this.myWebView.postMessage(event.nativeEvent.data);
     let msgData;
@@ -54,6 +54,9 @@ export default class FetchDrawCard extends Component {
   sayHi(input){
     console.log('Hi from DrawCard')
     return 'return from Hi'
+  }
+  getDataUrl(){
+    return imageUrl;
   }
   getPhotos = () => {
     CameraRoll.getPhotos({
