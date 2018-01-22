@@ -69,11 +69,14 @@ export default class FetchDrawCard extends Component {
                       })
     })
   }
-  draw = () => {
-    console.log('draw')
-    this.setState({showSketch: true})
+  toggleDraw = () => {
+    console.log('toggleDraw')
+    this.setState({showSketch: !this.state.showSketch})
   }
   render() {
+    if(this.state.showSketch){
+      return this.renderSketch();
+    }
     return (
       <View style={styles.container}>
         <Button
@@ -83,10 +86,41 @@ export default class FetchDrawCard extends Component {
         <Text style={styles.welcome}>
           Welcome to React Native Fetch!
         </Text>
-        {this.renderSketch()}
+        {this.renderModal()}
       </View>
     );
   } // end render
+  renderModal(){
+    return(
+      <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => console.log('closed')}
+        >
+          <View style={styles.modalContainer}>
+            <Button
+              title='Close'
+              onPress={this.toggleModal}
+            />
+            <ScrollView
+              contentContainerStyle={styles.scrollView}>
+              {this.renderPhotos()}
+            </ScrollView>
+            {
+              this.state.showDrawButton && (
+                <View style={styles.shareButton}>
+                    <Button
+                      title='Toggle Draw'
+                      onPress={this.toggleDraw}
+                    />
+                </View>
+              )
+            }
+          </View>
+        </Modal>
+      );
+  } // end renderModal
   renderSketch(){
     return(
       <View style={{flex: 1}}>
@@ -100,8 +134,8 @@ export default class FetchDrawCard extends Component {
               onMessage={this.onWebViewMessage.bind(this)}/>
         <View style={styles.shareButton}>
                     <Button
-                      title='Draw'
-                      onPress={this.draw}
+                      title='Toggle Draw'
+                      onPress={this.toggleDraw}
                     /></View>
       </View>
     );
@@ -132,33 +166,7 @@ export default class FetchDrawCard extends Component {
 } // end FetchDrawCard
 
 /*
-<Modal
-          animationType={"slide"}
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => console.log('closed')}
-        >
-          <View style={styles.modalContainer}>
-            <Button
-              title='Close'
-              onPress={this.toggleModal}
-            />
-            <ScrollView
-              contentContainerStyle={styles.scrollView}>
-              {this.renderPhotos()}
-            </ScrollView>
-            {
-              this.state.showDrawButton && (
-                <View style={styles.shareButton}>
-                    <Button
-                      title='Draw'
-                      onPress={this.draw}
-                    />
-                </View>
-              )
-            }
-          </View>
-        </Modal>
+
 */
 
 const styles = StyleSheet.create({
