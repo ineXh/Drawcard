@@ -22,6 +22,7 @@ import DrawCard from './src/DrawCard';
 import ChatHeads from './src/ChatHeads';
 import FetchCard from './src/FetchCard';
 import FetchDrawCard from './src/FetchDrawCard';
+import SplashCard from './src/SplashCard';
 
 const instructions = Platform.select({
   ios: '',
@@ -63,7 +64,6 @@ export default class App extends Component<{}> {
         <View style={styles.body}>
           {this.renderContent()}
         </View>
-
       </View>
     );
   } // end render
@@ -77,7 +77,7 @@ export default class App extends Component<{}> {
     }
     // No Card, render Card List
     return (
-      <View style={styles.menuContainer}>
+      <ScrollView style={styles.menuContainer}>
       <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, IntroCard, {name: 'Bob'})}>
           <Text style={styles.button2}>IntroCard Bob</Text>
@@ -102,7 +102,11 @@ export default class App extends Component<{}> {
           onPress={this.onButtonPress.bind(this, FetchDrawCard)}>
           <Text style={styles.button}>FetchDrawCard</Text>
         </TouchableOpacity>
-      </View>
+        <TouchableOpacity style={styles.menuItem}
+          onPress={this.onButtonPress.bind(this, SplashCard)}>
+          <Text style={styles.button}>SplashCard</Text>
+        </TouchableOpacity>
+      </ScrollView>
     );
   } // end renderContent
 } // end App

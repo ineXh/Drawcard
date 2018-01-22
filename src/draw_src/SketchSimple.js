@@ -11,7 +11,7 @@ function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   background(255);
   imageMode(CORNER);
-  sendMsg();
+  sendMsg('getDataUrl');
   /*image(bunnyImage, width/2, height/2, width/10, width/10);
   sendButton = new Button("send")
   sendButton.init(width*0.8, height*0.8, width/20)
@@ -27,24 +27,24 @@ function touchEnded(){
   mouseReleased()
   if(sendButton.pressed()){
   	sendButton.display()
-  	sendMsg();
+  	sendMsg('getDataUrl');
   }
 }
 function mouseReleased() {
 }
 
-var sendMsg = function(data){
-  centerText("send Msg", width/2, height*1/4);
-    webViewBridge.send(
-        'getDataUrl',
-        {mydata: data},
-        function(dataBack){
-            //centerText("receive back", width/2, height/2);
-            //centerText(dataBack, width/4, height*8/10);
-            urlImage = loadImage(dataBack);
-        },
-        function(){
-          //console.log('error')
-      	}
-    );
+var sendMsg = function(targetFunc, sendData){
+	centerText("send Msg", width/2, height*1/4);
+	webViewBridge.send(
+	    targetFunc,
+	    {mydata: sendData},
+	    function(receiveData){
+	        //centerText("receive back", width/2, height/2);
+	        //centerText(receiveData, width/4, height*8/10);
+	        urlImage = loadImage(receiveData);
+	    },
+	    function(){
+	      //console.log('error')
+	  	}
+	);
 } // end sendMsg
