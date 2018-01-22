@@ -1,9 +1,10 @@
-function Button(){
-	this.create();
+function Button(label){
+	this.create(label);
 }
 Button.prototype = {
-	create: function(){
+	create: function(label){
 		this.pos = new PVector(0, 0)
+		this.label = label;
 	},
 	init: function(x, y, r, img){
 		this.pos.x = x;
@@ -26,6 +27,7 @@ Button.prototype = {
 		//fill(255,0,0)
 		fill(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255))
 		ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
+		centerText(this.label, this.pos.x, this.pos.y);
 		//noTint();
 		//imageMode(CENTER);
 		//image(this.img, this.pos.x, this.pos.y, this.r*2, this.r*2);
