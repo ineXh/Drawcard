@@ -12,49 +12,61 @@ import {
   View,
   Animated,
   Image,
+  Dimensions,
   Easing
 } from 'react-native'
 const logo = require('./../assets/pixel_cow_512.png')
+const Screen = {
+  width: Dimensions.get('window').width,
+  height: Dimensions.get('window').height
+}
 
 export default class SplashCard extends Component {
   constructor () {
     super()
-    this.animatedValue = new Animated.Value(0)
+    this.state = {
+      animatedValue: new Animated.Value(0), 
+    };
   }
   componentDidMount () {
     this.animate()
   }
   animate () {
-    this.animatedValue.setValue(0)
+    this.state.animatedValue.setValue(0)
     Animated.timing(
-      this.animatedValue,
+      this.state.animatedValue,
       {
         toValue: 1,
-        duration: 2000,
+        duration: 4000,
         easing: Easing.linear
       }
     ).start(() => this.animate())
   }
   render () {
-    const imageSize = this.animatedValue.interpolate({
+    const imageSize = this.state.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: [24, 72]
     })
-    const textSize = this.animatedValue.interpolate({
+    const opacityValue = this.state.animatedValue.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [0, 1, 0]
+    })
+    const textSize = this.state.animatedValue.interpolate({
       inputRange: [0, 0.5, 1],
       outputRange: [18, 32, 18]
     })
     return (
       <View style={styles.container}>
         <Animated.Image
-          style={{ width: imageSize, height: imageSize }}
-          source={{uri: 'https://s3.amazonaws.com/media-p.slid.es/uploads/alexanderfarennikov/images/1198519/reactjs.png'}}/>
+          style={{ width: Screen.width/4, height: Screen.width/4 }}
+          source={logo}/>
         <Animated.Text
           style={{
-            fontSize: textSize,
+            fontSize: 24,
             marginTop: 10,
-            color: 'green'}} >
-            Animated Text!
+            opacity: opacityValue,
+            color: 'white'}} >
+            Cow
         </Animated.Text>
       </View>
     )
@@ -65,6 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#1979ff',
   }
 })

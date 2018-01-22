@@ -82,7 +82,7 @@ function setup() {
   imgScale = 1.2;//height/img.height
   background(255);
   centerText("setup", width/2, height/2);
-  testButton = new Button()
+  testButton = new Button("testButton")
   testButton.init(width*0.8, height*0.8, width/20)
   testButton.display()
   //image(img, 200, 200);

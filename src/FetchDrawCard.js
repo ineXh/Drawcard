@@ -90,7 +90,7 @@ export default class FetchDrawCard extends Component {
                         //console.log(shareOptions);
                       })
     })
-  }
+  } // end share
   toggleDraw = () => {
     console.log('toggleDraw')
     if(!this.state.showSketch){
@@ -142,10 +142,13 @@ export default class FetchDrawCard extends Component {
             {
               this.state.showDrawButton && (
                 <View style={styles.shareButton}>
-                    <Button
-                      title='Toggle Draw'
-                      onPress={this.toggleDraw}
-                    />
+                  <Button
+                    title='Toggle Draw'
+                    onPress={this.toggleDraw}
+                  />
+                  <Button
+                    title='Share'
+                    onPress={this.share}/>
                 </View>
               )
             }
@@ -170,10 +173,10 @@ export default class FetchDrawCard extends Component {
               scrollEnabled={false}
               onMessage={this.onWebViewMessage.bind(this)}/>
         <View style={styles.shareButton}>
-                    <Button
-                      title='Toggle Draw'
-                      onPress={this.toggleDraw}
-                    /></View>
+          <Button
+            title='Close Draw'
+            onPress={this.toggleDraw}
+          /></View>
       </View>
     );
   } // end renderSketch
