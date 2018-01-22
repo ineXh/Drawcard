@@ -18,6 +18,7 @@ import {
 import Share from 'react-native-share';
 import RNFetchBlob from 'react-native-fetch-blob'
 const { width } = Dimensions.get('window')
+let imageUrl = '';
 
 export default class FetchDrawCard extends Component {
   state = {
@@ -71,8 +72,17 @@ export default class FetchDrawCard extends Component {
   }
   toggleDraw = () => {
     console.log('toggleDraw')
-    this.setState({showSketch: !this.state.showSketch})
-  }
+    if(!this.state.showSketch){
+      const image = this.state.photos[this.state.index].node.image.uri;
+      RNFetchBlob.fs.readFile(image, 'base64')
+      .then((data) => {
+        imageUrl = 'data:image/jpg;base64,${data}';
+        this.setState({showSketch: true})
+      })
+    }else{
+      this.setState({showSketch: false})
+    }
+  } // end toggleDraw
   render() {
     if(this.state.showSketch){
       return this.renderSketch();
@@ -122,12 +132,14 @@ export default class FetchDrawCard extends Component {
       );
   } // end renderModal
   renderSketch(){
+    let code = "";
     return(
       <View style={{flex: 1}}>
         <WebView
               style={{flex: 1}}
               ref={webview => { this.myWebView = webview; }}
               source={require('./drawSimple.html')}
+              injectedJavaScript={code}
               javaScriptEnabled={true}
               javaScriptEnabledAndroid={true}
               scrollEnabled={false}

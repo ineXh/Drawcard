@@ -70,14 +70,7 @@ function preload() {
   //img.loadPixels()
 
 }
-function centerText(t, x, y){
-  fill(color(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255)));
-  rectMode(CENTER);
-  rect(x, y, width/2.5, height/20);
-  fill(255);
-  textAlign(CENTER);
-  text(t, x, y);
-}
+
 var imgScale;
 function setup() {
   window.scrollTo(0,1);

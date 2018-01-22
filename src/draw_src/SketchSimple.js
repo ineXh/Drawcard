@@ -9,4 +9,5 @@ function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   background(255);
   image(bunnyImage, width/2, height/2, width/10, width/10);
+  centerText('hey', width/2, height*3/4);
 } // end setup
