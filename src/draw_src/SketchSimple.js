@@ -10,15 +10,18 @@ function setup() {
   document.body.style.overflow = 'hidden';
   createCanvas(window.innerWidth, window.innerHeight);
   background(255);
-  imageMode(CENTER);
-  image(bunnyImage, width/2, height/2, width/10, width/10);
+  imageMode(CORNER);
+  sendMsg();
+  /*image(bunnyImage, width/2, height/2, width/10, width/10);
   sendButton = new Button("send")
   sendButton.init(width*0.8, height*0.8, width/20)
   sendButton.display()
-  if(cat != undefined) centerText(cat, width/2, height*3/4);
+  if(cat != undefined) centerText(cat, width/2, height*3/4);*/
 } // end setup
 function draw(){
-	if(urlImage) image(urlImage, width/4, height/4, width/5, width/5);
+	background(255);
+	//if(!urlImage) centerText("loading", width/2, height*2/4);
+	if(urlImage) image(urlImage, 0, 0, width, width/urlImage.width*urlImage.height);
 }
 function touchEnded(){
   mouseReleased()
@@ -36,8 +39,8 @@ var sendMsg = function(data){
         'getDataUrl',
         {mydata: data},
         function(dataBack){
-            centerText("receive back", width/2, height/2);
-            centerText(dataBack, width/4, height*8/10);
+            //centerText("receive back", width/2, height/2);
+            //centerText(dataBack, width/4, height*8/10);
             urlImage = loadImage(dataBack);
         },
         function(){
