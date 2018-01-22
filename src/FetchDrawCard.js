@@ -76,7 +76,8 @@ export default class FetchDrawCard extends Component {
       const image = this.state.photos[this.state.index].node.image.uri;
       RNFetchBlob.fs.readFile(image, 'base64')
       .then((data) => {
-        imageUrl = 'data:image/jpg;base64,${data}';
+        imageUrl = 'data:image/jpg;base64,' + data;
+        //console.log(imageUrl)
         this.setState({showSketch: true})
       })
     }else{
@@ -132,7 +133,10 @@ export default class FetchDrawCard extends Component {
       );
   } // end renderModal
   renderSketch(){
-    let code = "";
+    //let code = "var imageUrl = " + imageUrl;
+    //let code = 'window.imageUrl = ' + imageUrl;
+    let code = 'window.cat = "hey"'
+    //console.log(code)
     return(
       <View style={{flex: 1}}>
         <WebView
