@@ -19,6 +19,7 @@ function setup() {
 function touchEnded(){
   mouseReleased()
   if(sendButton.pressed()){
+  	sendButton.display()
   }
 }
 function mouseReleased() {

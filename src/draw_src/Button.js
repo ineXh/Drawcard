@@ -26,7 +26,7 @@ Button.prototype = {
 	display: function(){
 		//fill(255,0,0)
 		fill(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255))
-		ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
+		//ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
 		centerText(this.label, this.pos.x, this.pos.y);
 		//noTint();
 		//imageMode(CENTER);
