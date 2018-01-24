@@ -40,7 +40,8 @@ export default class SplashCard extends Component {
         duration: 4000,
         easing: Easing.linear
       }
-    ).start(() => this.animate())
+    //).start(() => this.animate())
+    ).start(() => this.props.onMenuPress())
   }
   render () {
     const imageSize = this.state.animatedValue.interpolate({
