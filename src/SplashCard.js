@@ -32,16 +32,19 @@ export default class SplashCard extends Component {
     this.animate()
   }
   animate () {
+    console.log(this.props.input.onMenuPress)
+    let next = this.props.input.onMenuPress;
+    if(next == undefined) next = this.animate.bind(this);
     this.state.animatedValue.setValue(0)
     Animated.timing(
       this.state.animatedValue,
       {
         toValue: 1,
-        duration: 4000,
+        duration: 3000,
         easing: Easing.linear
       }
     //).start(() => this.animate())
-    ).start(() => this.props.onMenuPress())
+    ).start(() => next.call())      
   }
   render () {
     const imageSize = this.state.animatedValue.interpolate({

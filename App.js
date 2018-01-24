@@ -39,7 +39,10 @@ export default class App extends Component<{}> {
   }
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onMenuPress.bind(this));
-    this.setState({currentCard: SplashCard, input: {onMenuPress: this.onMenuPress.bind(this)}});
+    this.setState({
+      currentCard: SplashCard,
+      input: {onMenuPress: this.onMenuPress.bind(this)}
+    });
   }
 
   componentWillUnmount() {
