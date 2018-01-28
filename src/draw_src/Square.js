@@ -10,9 +10,13 @@ Square.prototype = {
 		this.sat = sat;
 		this.bright = bright;
 	},
-	display: function(){
+	draw: function(){
 		pgDrawing.fill(this.hue, this.sat, this.bright);
     	//pgDrawing.rect(this.x, this.y, this.s, this.s);
     	pgDrawing.ellipse(this.x, this.y, this.s, this.s);
+	},
+	display: function(){
+		fill(this.hue, this.sat, this.bright);
+		ellipse(this.x, this.y, this.s, this.s);
 	}
 } // end Square

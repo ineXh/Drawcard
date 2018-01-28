@@ -32,6 +32,8 @@ function swap(json){
 }
 
 var dominantHue;
+var dominantHueGreater5 = false;
+var dominantHueEdge = false;
 var hueRange = 255;
 var dominantSaturation;
 var dominantBrightness;
@@ -82,6 +84,11 @@ function RGBtoHSB(r, g, b) {
 function extractColorFromImage(img) {
   return extractColorFromImageXY(img, 0, 0, img.width, img.height, constants.ExtractImageType.Whole);
 }
+function extractColorFromImageEdge(img) {
+  var hsb1 = extractColorFromImageXY(img, 0, 0, 1, 1, constants.ExtractImageType.Section);
+  var hsb2 = extractColorFromImageXY(img, img.width-1, 0, img.width, 1, constants.ExtractImageType.Section);
+  if(dominantHue == hsb1.h && dominantHue == hsb2.h) dominantHueEdge = true
+}
 function extractColorFromImageXY(img, x1, y1, x2, y2, extractImageType) {
   //img.loadPixels();
   var numberOfPixels = img.pixels.length;
@@ -102,8 +109,10 @@ function extractColorFromImageXY(img, x1, y1, x2, y2, extractImageType) {
       r = img.pixels[index]
       g = img.pixels[index+1]
       b = img.pixels[index+2]
+      a = img.pixels[index+3]
       RGBtoHSB(r, g, b);
       var HUE = Math.ceil(gHue*255);
+      if(HUE == 0 && a == 0) HUE = -1; // Blank space
       var SAT = gSat;
       var BRIGHT = gBright;
       if(hues[HUE] == undefined || isNaN(HUE)){
