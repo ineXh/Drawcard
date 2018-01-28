@@ -86,9 +86,9 @@ export default class FetchDrawCard extends Component {
       Share.open(shareOptions)
         .then((res) => console.log('res:', res))
         .catch(err => {
-                        console.log('err', err);
-                        //console.log(shareOptions);
-                      })
+                      console.log('err', err);
+                      //console.log(shareOptions);
+                    })
     })
   } // end share
   toggleDraw = () => {
@@ -166,7 +166,7 @@ export default class FetchDrawCard extends Component {
         <WebView
               style={{flex: 1}}
               ref={webview => { this.myWebView = webview; }}
-              source={require('./drawSimple.html')}
+              source={require('./SketchSimple.html')}
               injectedJavaScript={code}
               javaScriptEnabled={true}
               javaScriptEnabledAndroid={true}

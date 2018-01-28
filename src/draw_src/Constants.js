@@ -6,6 +6,11 @@ window.PI = Math.PI;
 
 function constants(){};
 
+constants.ExtractImageType = function(){};
+constants.ExtractImageType.Whole = 0;
+constants.ExtractImageType.Section = 1;
+
+
 constants.GameState = function(){};
 constants.GameState.Title = 0;
 constants.GameState.GetReady = 1;

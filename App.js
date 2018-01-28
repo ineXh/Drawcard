@@ -82,29 +82,13 @@ export default class App extends Component<{}> {
     // No Card, render Card List
     return (
       <View style={styles.menuContainer}>
-      <TouchableOpacity style={styles.menuItem}
-          onPress={this.onButtonPress.bind(this, IntroCard, {name: 'Bob'})}>
-          <Text style={styles.button2}>IntroCard Bob</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}
-          onPress={this.onButtonPress.bind(this, IntroCard, {name: 'Chris'})}>
-          <Text style={styles.button}>IntroCard Chris</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, DrawCard, undefined)}>
           <Text style={styles.button}>DrawCard</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}
-          onPress={this.onButtonPress.bind(this, FetchCard)}>
-          <Text style={styles.button}>FetchCard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}
           onPress={this.onButtonPress.bind(this, FetchDrawCard)}>
           <Text style={styles.button}>FetchDrawCard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}
-          onPress={this.onButtonPress.bind(this, SplashCard)}>
-          <Text style={styles.button}>SplashCard</Text>
         </TouchableOpacity>
       </View>
     );

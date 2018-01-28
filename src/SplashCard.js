@@ -70,7 +70,7 @@ export default class SplashCard extends Component {
             marginTop: 10,
             opacity: opacityValue,
             color: 'white'}} >
-            Cow
+            SketchingCow
         </Animated.Text>
       </View>
     )
