@@ -13,8 +13,8 @@ function setup() {
   imageMode(CORNER);
   sendMsg('getDataUrl');
   /*image(bunnyImage, width/2, height/2, width/10, width/10);
-  sendButton = new Button("send")
-  sendButton.init(width*0.8, height*0.8, width/20)
+  sendButton = new Button()
+  sendButton.init(constants.ButtonType.Label, width*0.8, height*0.8, width/20, "send")
   sendButton.display()
   if(cat != undefined) centerText(cat, width/2, height*3/4);*/
 } // end setup

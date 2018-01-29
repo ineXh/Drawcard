@@ -5,7 +5,7 @@ var imgScale;
 var array;
 function preload() {
 	//bunnyImage = loadImage("./../assets/bunny.png");
-	urlImage = loadImage("./../assets/10.png");
+	urlImage = loadImage("./../assets/mona.jpg");
 }
 
 function setup() {

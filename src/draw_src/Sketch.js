@@ -82,8 +82,8 @@ function setup() {
   imgScale = 1.2;//height/img.height
   background(255);
   centerText("setup", width/2, height/2);
-  testButton = new Button("testButton")
-  testButton.init(width*0.8, height*0.8, width/20)
+  testButton = new Button()
+  testButton.init(constants.ButtonType.Label, width*0.8, height*0.8, width/20, "testButton")
   testButton.display()
   //image(img, 200, 200);
   /*var c = document.getElementById("defaultCanvas0");

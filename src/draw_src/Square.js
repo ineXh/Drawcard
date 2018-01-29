@@ -9,6 +9,7 @@ Square.prototype = {
 		this.hue = hue;
 		this.sat = sat;
 		this.bright = bright;
+		this.hide = false;
 	},
 	draw: function(){
 		pgDrawing.fill(this.hue, this.sat, this.bright);
@@ -16,6 +17,7 @@ Square.prototype = {
     	pgDrawing.ellipse(this.x, this.y, this.s, this.s);
 	},
 	display: function(){
+		if(this.hide) return;
 		fill(this.hue, this.sat, this.bright);
 		ellipse(this.x, this.y, this.s, this.s);
 	}
