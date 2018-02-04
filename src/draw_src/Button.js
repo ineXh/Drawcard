@@ -17,9 +17,9 @@ Button.prototype = {
 	clean: function(){
 		this.img = null;
 	},
-	pressed: function(){
-		if(mouseX > this.pos.x - this.r && mouseX < this.pos.x + this.r
-		&& mouseY > this.pos.y - this.r && mouseY < this.pos.y + this.r){
+	pressed: function(x, y){
+		if(x > this.pos.x - this.r && x < this.pos.x + this.r
+		&& y > this.pos.y - this.r && y < this.pos.y + this.r){
 			//console.log('pressed')
 			return true
 		}

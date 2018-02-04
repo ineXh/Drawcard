@@ -42,6 +42,7 @@ var dominantHue;
 var dominantHueGreater5 = false;
 var dominantHueEdge = false;
 var hueRange = 255;
+var maxHueChoice = 10;
 var dominantSaturation;
 var dominantBrightness;
 var dominantHues = {};
@@ -143,7 +144,7 @@ function extractColorFromImageXY(img, x1, y1, x2, y2, extractImageType) {
       dominantHues = {}
       dominantSatuations = {}
       dominantBrightnesses = {}
-      for(var i = arr.length-1; i > arr.length-11 && i >= 0; i--){
+      for(var i = arr.length-1; i > arr.length-(maxHueChoice+1) && i >= 0; i--){
         var count = arr[i];
         var hueIndex = swapped[count];
         dominantHues[hueIndex] = {
