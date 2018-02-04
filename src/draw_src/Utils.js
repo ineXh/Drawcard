@@ -30,6 +30,13 @@ function swap(json){
   }
   return ret;
 }
+var spliceOne = function(arr, index) {
+  var len=arr.length;
+  if (!len) { return }
+  while (index<len) {
+    arr[index] = arr[index+1]; index++ }
+  arr.length--;
+};
 
 var dominantHue;
 var dominantHueGreater5 = false;
