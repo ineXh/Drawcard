@@ -33,6 +33,9 @@ Button.prototype = {
 			case constants.ButtonType.Circle:
 				this.displayCircle();
 			break;
+			case constants.ButtonType.Image:
+				this.displayImage();
+			break;
 		}
 	},
 	displayCircle: function(){
@@ -47,5 +50,15 @@ Button.prototype = {
 		//noTint();
 		//imageMode(CENTER);
 		//image(this.img, this.pos.x, this.pos.y, this.r*2, this.r*2);
+	},
+	displayImage: function(){
+		/*fill(this.clr);
+		stroke(0);
+		strokeWeight(5);
+		rectMode(CENTER);
+		rect(this.pos.x, this.pos.y, this.r*2, this.r*2);
+		var scale = 0.75;*/
+		imageMode(CENTER);
+		image(this.img, this.pos.x, this.pos.y, this.r*2, this.r*2);
 	}
 } // end Button

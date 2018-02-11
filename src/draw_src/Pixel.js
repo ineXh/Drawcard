@@ -1,4 +1,8 @@
 var img;
+var imgZoomIn;
+var imgZoomOut;
+var buttonZoomIn;
+var buttonZoomOut;
 var urlImage;
 var pgDrawing;
 var buttons = [];
@@ -6,15 +10,28 @@ var buttonTranslateX;
 var poop = [];
 var poopTranslateX;
 var poopTranslateY;
-var screenTranslateX;
-var screenTranslateY;
+var screenCurrentTranslateX = 0;
+var screenCurrentTranslateY = 0;
+var screenInitialTranslateX = 0;
+var screenInitialTranslateY = 0;
+var screenTotalTranslateX = 0;
+var screenTotalTranslateY = 0;
+var screenTranslateScale = 1.0;
+var screenScale = 1.0;
+
+var screenCenterX = 0;
+var screenCenterY = 0;
+
 var mult = 4;
-var side = 64;//6*mult;
+var side = 16;//6*mult;
 var outWidth;// = 128*mult;
 var outHeight;// = 128*mult;
 
 function preload() {
+	imgZoomIn = loadImage("./../assets/zoomin.png");
+	imgZoomOut = loadImage("./../assets/zoomout.png");
 	img = loadImage("./../assets/whole.png");
+	//img = loadImage("./../assets/airport-photo.jpg");
 }
 
 function setup() {
@@ -27,6 +44,21 @@ function setup() {
 	colorMode(HSB, 255);
 	noStroke();
 	textSize(24);
+
+	buttonZoomIn = new Button();
+	buttonZoomIn.init(constants.ButtonType.Image,
+			width*0.82, height*0.85, width*0.04,
+			"", imgZoomIn,
+			color(200)
+			);
+	buttonZoomOut = new Button();
+	buttonZoomOut.init(constants.ButtonType.Image,
+			width*0.92, height*0.85, width*0.04,
+			"", imgZoomOut,
+			color(200)
+			);
+	//
+	//width*0.9, height*0.9, width*0.04, width*0.04
 
 
 	/*pgDrawing = createGraphics(width, height);
@@ -56,8 +88,8 @@ function setupImage(img){
 		outHeight = height/2;
 		img.resize(0, outHeight);
 	}
-	poopTranslateX = (width-img.width)/2;
-	poopTranslateY = height*0.1;
+	poopTranslateX = 0;//(width-img.width)/2;
+	poopTranslateY = 0;//height*0.1;
 	img.loadPixels()
 
 	var hsb = extractColorFromImage(img);
@@ -77,7 +109,7 @@ function setupImage(img){
 		//console.log('hue ' + hue)
 		var button = new Button();
 		button.init(constants.ButtonType.Circle,
-			i*width/20, height*9/10, 15,
+			i*width*0.05, height*9/10, width*0.02,
 			"", null,
 			color(hue, dominantHues[hue].saturation, dominantHues[hue].brightness)
 			);
@@ -88,20 +120,29 @@ function setupImage(img){
 		buttons.push(button)
 	}
 	buttonTranslateX = (1-buttons[buttons.length-1].pos.x/width)/2 * width;
+	screenInitialTranslateX = (width-img.width)/2;
+	screenTotalTranslateX = screenInitialTranslateX;
 	finishedSetup = true;
+	noLoop();
 } // end setupImage
 
 function draw(){
-	background(255);
+	colorMode(RGB, 255);
+	background(126,176,229);
+	colorMode(HSB, 255);
 	//image(pgDrawing, 0, 0, pgDrawing.width, pgDrawing.height);
 	if(img) setupImage(img);
 	push();
-        translate(poopTranslateX, poopTranslateY);
-        for (var i = 0; i < poop.length; i++) {
-		    var C = poop[i];
-		    C.display();
-		}
-    pop();
+		translate(screenTotalTranslateX, screenTotalTranslateY);
+		scale(screenScale, screenScale)
+		push();
+	        translate(poopTranslateX, poopTranslateY);
+	        for (var i = 0; i < poop.length; i++) {
+			    var C = poop[i];
+			    C.display();
+			}
+	    pop();
+	pop();
     push();
     	translate(buttonTranslateX, 0);
 		for (var i = 0; i < buttons.length; i++) {
@@ -111,11 +152,22 @@ function draw(){
 	pop();
 	//text("" + Math.floor(mouseX) + ", " +
 	//	Math.floor(mouseY), width*0.8, height*0.95)
+	buttonZoomIn.display();
+	buttonZoomOut.display();
+	//image(imgZoomIn, width*0.9, height*0.9, width*0.04, width*0.04)
+	//image(imgZoomOut, width*0.95, height*0.9, width*0.04, width*0.04)
 }
 function touchStarted(){
+	//console.log('touchStarted')
+	mouseStartX = mouseX;
+	mouseStartY = mouseY;
+	loop();
+	//console.log('mouseStartX ' + mouseStartX)
+	//console.log('screenCurrentTranslateX ' + screenCurrentTranslateX)
   //mouseClicked()
 }
 function mouseClicked() {
+	//console.log('mouseClicked')
 	for (var i = 0; i < buttons.length; i++) {
 	    var button = buttons[i];
 	    if(button.pressed(mouseX - buttonTranslateX, mouseY)){
@@ -124,7 +176,7 @@ function mouseClicked() {
 	    	//var hue = Object.keys(dominantHues)[i];
 	    	//if(dominantHues[hue] == undefined) debugger;
 	    	if(dominantHues[hue].indices == undefined &&
-	    		dominantHues[hue].diffBrightnessIndices == undefined) return;
+	    		dominantHues[hue].diffBrightnessIndices == undefined) continue;
 	    	if(dominantHues[hue].indices != undefined){
 	    		for(var k = 0; k < dominantHues[hue].indices.length; k++){
 		    		index = dominantHues[hue].indices[k]
@@ -137,9 +189,80 @@ function mouseClicked() {
 		    		poop[index].hide = !poop[index].hide;
 		    	}
 	    	}
+	    	draw();
 	    } // end button pressed
 	}
+	if(buttonZoomIn.pressed(mouseX, mouseY)){
+		getScreenCenter();
+		screenScale += 0.1;
+		panTo(screenCenterX, screenCenterY);
+		draw();
+	}
+	if(buttonZoomOut.pressed(mouseX, mouseY)){
+		getScreenCenter();
+		screenScale -= 0.1;
+		panTo(screenCenterX, screenCenterY);
+		draw();
+	}
 } // end mouseClicked
+mouseStartX = 0;
+mouseStartY = 0;
+function touchMoved(){
+  mouseDragged()
+}
+function mouseDragged() {
+	screenCurrentTranslateX = (mouseX - mouseStartX)*screenTranslateScale;
+	screenTotalTranslateX = screenInitialTranslateX + screenCurrentTranslateX;
+
+	if(screenTotalTranslateX < (-img.width+side/2)*screenScale)
+		screenCurrentTranslateX = (-img.width+side/2)*screenScale
+								-screenInitialTranslateX;
+	if(screenTotalTranslateX > (width-side*screenScale)) //-img.width*screenScale
+		screenCurrentTranslateX =
+			(width-side*screenScale) - screenInitialTranslateX;
+	screenTotalTranslateX = screenInitialTranslateX + screenCurrentTranslateX;
+
+	screenCurrentTranslateY = (mouseY - mouseStartY)*screenTranslateScale;
+	screenTotalTranslateY = screenInitialTranslateY + screenCurrentTranslateY;
+
+	if(screenTotalTranslateY < (-img.height+side/2)*screenScale)
+		screenCurrentTranslateY = (-img.height+side/2)*screenScale - screenInitialTranslateY;
+	
+	if(screenTotalTranslateY > (height-side*screenScale)) //+(img.height+side*2)*0*screenScale)
+		screenCurrentTranslateY = (height-side*screenScale) - screenInitialTranslateY;
+	screenTotalTranslateY = screenInitialTranslateY + screenCurrentTranslateY;
+	draw();
+}
+function getScreenCenter(){
+	var screenLeft = -screenTotalTranslateX/screenScale;
+	var screenRight = (-screenTotalTranslateX + width)/screenScale;
+	var screenTop = -screenTotalTranslateY/screenScale;
+	var screenBot = (-screenTotalTranslateY + height)/screenScale;
+	screenCenterX = (screenLeft + screenRight) / 2;
+	screenCenterY = (screenTop + screenBot) / 2;
+}
+function panTo(x, y){
+	screenTotalTranslateX = -(x - width/2 / screenScale) * screenScale;
+    screenTotalTranslateY = -(y - height/2 / screenScale) * screenScale;
+    screenCurrentTranslateX = 0;
+    screenInitialTranslateX = screenTotalTranslateX;
+    screenCurrentTranslateY = 0;
+    screenInitialTranslateY = screenTotalTranslateY;
+}
+function touchEnded(){
+  mouseReleased()
+}
+function mouseReleased() {
+	//console.log('screenInitialTranslateX ' + screenInitialTranslateX)
+	screenInitialTranslateX += screenCurrentTranslateX;
+	screenInitialTranslateY += screenCurrentTranslateY;
+	screenCurrentTranslateX = 0;
+	screenCurrentTranslateY = 0;
+	released = true;
+	newTouch = true;
+	noLoop();
+}
+
 function printPoopActive(){
 	for(var i = 0; i < poop.length; i++){
 		if(poop[i].hide == false) console.log(i)

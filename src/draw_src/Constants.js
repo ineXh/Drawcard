@@ -13,6 +13,7 @@ constants.ExtractImageType.Section = 1;
 constants.ButtonType = function(){};
 constants.ButtonType.Label = 0;
 constants.ButtonType.Circle = 1;
+constants.ButtonType.Image = 2;
 
 
 constants.GameState = function(){};
