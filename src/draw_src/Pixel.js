@@ -30,7 +30,7 @@ var outHeight;// = 128*mult;
 function preload() {
 	imgZoomIn = loadImage("./../assets/zoomin.png");
 	imgZoomOut = loadImage("./../assets/zoomout.png");
-	img = loadImage("./../assets/whole.png");
+	//img = loadImage("./../assets/whole.png");
 	//img = loadImage("./../assets/airport-photo.jpg");
 }
 
@@ -45,18 +45,21 @@ function setup() {
 	noStroke();
 	textSize(24);
 
-	buttonZoomIn = new Button();
-	buttonZoomIn.init(constants.ButtonType.Image,
-			width*0.82, height*0.85, width*0.04,
-			"", imgZoomIn,
-			color(200)
-			);
+	
 	buttonZoomOut = new Button();
 	buttonZoomOut.init(constants.ButtonType.Image,
-			width*0.92, height*0.85, width*0.04,
+			width*0.72, height*0.85, width*0.06,
 			"", imgZoomOut,
 			color(200)
 			);
+	buttonZoomIn = new Button();
+	buttonZoomIn.init(constants.ButtonType.Image,
+			width*0.87, height*0.85, width*0.06,
+			"", imgZoomIn,
+			color(200)
+			);
+
+	sendMsg('getDataUrl', null, takeImage);
 	//
 	//width*0.9, height*0.9, width*0.04, width*0.04
 
@@ -101,15 +104,26 @@ function setupImage(img){
 	drawImage();
 
 	var i = 0;
+	var colors = [];
 	for(hue in dominantHues){
 		//if(dominantHues[hue].indices == undefined) debugger;
 		if(dominantHues[hue].indices == undefined
 		&& dominantHues[hue].diffBrightnessIndices == undefined) continue;
 
 		//console.log('hue ' + hue)
+		colors.push(hue)
+		colors.push(dominantHues[hue].saturation/255)
+		colors.push(dominantHues[hue].brightness/255)
 		var button = new Button();
+		if(i < 6){
+			x = i*width*0.15
+			y = height*0.75
+		}else{
+			x = (i-6)*width*0.15
+			y = height*0.85
+		}
 		button.init(constants.ButtonType.Circle,
-			i*width*0.05, height*9/10, width*0.02,
+			x, y, width*0.06,
 			"", null,
 			color(hue, dominantHues[hue].saturation, dominantHues[hue].brightness)
 			);
@@ -119,7 +133,10 @@ function setupImage(img){
 		i++;
 		buttons.push(button)
 	}
-	buttonTranslateX = (1-buttons[buttons.length-1].pos.x/width)/2 * width;
+	sendMsg('giveColor', colors.toString(), null);
+
+
+	buttonTranslateX = (1-buttons[5].pos.x/width)/2 * width;
 	screenInitialTranslateX = (width-img.width)/2;
 	screenTotalTranslateX = screenInitialTranslateX;
 	finishedSetup = true;
@@ -201,6 +218,7 @@ function mouseClicked() {
 	if(buttonZoomOut.pressed(mouseX, mouseY)){
 		getScreenCenter();
 		screenScale -= 0.1;
+		if(screenScale <= 0.1) screenScale = 0.1;
 		panTo(screenCenterX, screenCenterY);
 		draw();
 	}
@@ -339,3 +357,17 @@ function drawImage(){
     //C.draw();
   }
 } // end drawImage
+var takeImage = function(receiveData){
+	img = loadImage(receiveData);
+}
+var sendMsg = function(targetFunc, sendData, receiveCallback){
+	centerText("send Msg", width/2, height*1/4);
+	webViewBridge.send(
+	    targetFunc,
+	    {mydata: sendData},
+	    receiveCallback,
+	    function(){
+	      //console.log('error')
+	  	}
+	);
+} // end sendMsg

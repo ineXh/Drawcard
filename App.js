@@ -22,7 +22,9 @@ import DrawCard from './src/DrawCard';
 //import ChatHeads from './src/ChatHeads';
 import FetchCard from './src/FetchCard';
 import FetchDrawCard from './src/FetchDrawCard';
+import GalleryCard from './src/GalleryCard';
 import SplashCard from './src/SplashCard';
+import HeaderComponent from './src/HeaderComponent';
 
 const instructions = Platform.select({
   ios: '',
@@ -34,19 +36,24 @@ export default class App extends Component<{}> {
     super(props);
     this.state = {
       currentCard: undefined,
-      input: undefined
+      input: undefined,
+      currentHeader: 'Gallery'
     }
   }
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onMenuPress.bind(this));
     this.setState({
       currentCard: SplashCard,
-      input: {onMenuPress: this.onMenuPress.bind(this)}
+      input: {finishCallBack: this.onMenuPress.bind(this)}
     });
   }
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.onMenuPress.bind(this));
+  }
+  goGallery(){
+    this.setState({currentCard: GalleryCard});
+    return true;
   }
   onMenuPress() {
     this.setState({currentCard: undefined});
@@ -56,13 +63,7 @@ export default class App extends Component<{}> {
     this.setState({currentCard: Card, input: input});
   } // end onButtonPress
 
-  render() {
-    /*<View style={styles.header}>
-          <TouchableOpacity onPress={this.onMenuPress.bind(this)}>
-            <Image style={styles.menuIcon} source={require('./assets/icon-menu.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Draw</Text>
-        </View>*/
+  render() {    
     return (
       <View style={styles.container}>
         <View style={styles.body}>
@@ -71,7 +72,18 @@ export default class App extends Component<{}> {
       </View>
     );
   } // end render
-
+  renderHeader(){
+    if(this.state.currentCard == SplashCard) return null;
+    if(this.state.currentCard == FetchDrawCard) return null;
+    return(
+      <View style={styles.header}>
+              <TouchableOpacity onPress={this.onMenuPress.bind(this)}>
+                <Image style={styles.menuIcon} source={require('./assets/cow_emoji.png')} />
+              </TouchableOpacity>
+              <Text style={styles.headerTitle}>{this.state.currentHeader}</Text>
+        </View>
+      );
+  }
   renderContent() {
     // render Card
     if (this.state.currentCard) {
@@ -83,12 +95,12 @@ export default class App extends Component<{}> {
     return (
       <View style={styles.menuContainer}>
         <TouchableOpacity style={styles.menuItem}
-          onPress={this.onButtonPress.bind(this, DrawCard, undefined)}>
-          <Text style={styles.button}>DrawCard</Text>
+          onPress={this.onButtonPress.bind(this, GalleryCard, undefined)}>
+          <Text style={styles.button}>Pixel Draw</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}
-          onPress={this.onButtonPress.bind(this, FetchDrawCard)}>
-          <Text style={styles.button}>FetchDrawCard</Text>
+          onPress={this.onButtonPress.bind(this, DrawCard, undefined)}>
+          <Text style={styles.button}>Free Sketch</Text>
         </TouchableOpacity>
       </View>
     );
@@ -106,7 +118,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     paddingLeft: 20,
     flexDirection: 'row',
-    backgroundColor: '#0b5ea5',
+    backgroundColor: '#f99595',
     alignItems: 'center',
     zIndex: 1001
   },
@@ -120,7 +132,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 0,
     paddingLeft: 0,
-    backgroundColor: '#1979ff',
+    backgroundColor: '#fff9f9',
   },
   menuItem: {
     alignItems: 'center',
@@ -136,12 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   button: {
-    color: '#e0e0e0',
-    fontSize: 20,
-    marginBottom: 24
-  },
-  button2: {
-    color: '#F09B95',
+    color: 'black',
     fontSize: 20,
     marginBottom: 24
   },

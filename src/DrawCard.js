@@ -136,9 +136,9 @@ export default class DrawCard extends Component {
           }]} />
           <Interactable.View
             verticalOnly={true}
-            snapPoints={[{y: Screen.height/4}, {y: Screen.height-25}]}
+            snapPoints={[{y: Screen.height/4}, {y: Screen.height-100}]}
             boundaries={{top: -300}}
-            initialPosition={{y: Screen.height-25}}
+            initialPosition={{y: Screen.height-100}}
             animatedValueY={this._deltaY}>
             <View style={styles.panel}>
               <View style={styles.panelHeader}>
