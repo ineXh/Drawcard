@@ -6,6 +6,7 @@ import {
   View,
   Image,
   WebView,
+  Slider,
   Dimensions,
   Animated, TouchableOpacity
 } from 'react-native';
@@ -16,7 +17,7 @@ const Screen = {
   width: Dimensions.get('window').width,
   height: Dimensions.get('window').height-50
 }
-
+const circle = require('./../assets/circle.png')
 const colors = [
 0  , 0  , 0  ,
 127, 127, 127,
@@ -71,7 +72,7 @@ export default class FreeSketchCard extends Component {
     for(var i = 0; i < colors.length; i=i+3){
       colorPicks.push('rgb(' + colors[i] + ',' + colors[i+1] + ',' + colors[i+2] + ')')
     }
-    console.log(colorPicks)
+    //console.log(colorPicks)
     this.setState({colorPicks: colorPicks})
   }
   onPressNewImage(name) {
@@ -114,12 +115,14 @@ export default class FreeSketchCard extends Component {
   }
 
   render() {
+    var code = "var para = document.createElement('p');para.appendChild(document.createTextNode('" + 1 + "'));document.body.appendChild(para);";
     return (
       <View style={{flex: 1}}>
         <WebView
           style={{flex: 1}}
           ref={webview => { this.myWebView = webview; }}
           source={require('./FreeSketch.html')}
+          injectedJavaScript={code}
           javaScriptEnabled={true}
           javaScriptEnabledAndroid={true}
           scrollEnabled={false}
@@ -179,12 +182,12 @@ export default class FreeSketchCard extends Component {
         this.state.colorPicks.map((d, index) =>{
               return(
                   <Image style={{ margin: 5,
-                                  width: width/8,
-                                  height: width/8,
+                                  width: Screen.width/8,
+                                  height: Screen.width/8,
                                   alignItems: 'center',
                                   borderWidth: 3,
                                   borderColor: 'black',
-                                  borderRadius: width/16,
+                                  borderRadius: Screen.width/16,
                                   tintColor: this.state.colorPicks[index]}} 
                     key={index} source={circle} />
                 )
