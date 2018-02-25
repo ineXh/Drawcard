@@ -17,66 +17,79 @@ const Screen = {
   height: Dimensions.get('window').height-50
 }
 
-const airport = require('./../assets/airport-photo.jpg')
-//const imgLink = require('http://cdn.osxdaily.com/wp-content/uploads/2015/05/howto-page-up-page-down-mac-keyboard-300x292.jpg')
-window.myvar = 123
-const HTMLC = '<div id="myContent">Your HTML content 12</div>'
-const jsCode = "document.querySelector('#myContent').style.backgroundColor = '#7294cc';"
-export default class DrawCard extends Component {
+const colors = [
+0  , 0  , 0  ,
+127, 127, 127,
+136, 0  , 21 ,
+255, 255, 255,
+195, 195, 195,
+255, 128, 128,
+255, 255, 128,
+128, 255, 128,
+0  , 255, 128,
+128, 255, 255,
+0  , 128, 255,
+255, 0  , 0  ,
+255, 255, 0  ,
+128, 255, 0  ,
+0  , 255, 64 ,
+0  , 255, 255,
+0  , 128, 192,
+128, 64 , 64 ,
+255, 128, 64 ,
+0  , 255, 0  ,
+0  , 128, 128,
+0  , 64 , 128,
+128, 128, 255,
+128, 64 , 64 ,
+255, 128, 64 ,
+0  , 255, 0  ,
+0  , 128, 128,
+0  , 64 , 128,
+128, 128, 255
+];
+
+export default class FreeSketchCard extends Component {
   constructor(props) {
     super(props);
     this._deltaY = new Animated.Value(Screen.height-100);
     this.state = {
-      number: myvar,
-      showImg: false,
-      img: airport,
-      photos: [],
-      drawings: [],
-      index: null,
+      colorPicks: [],
+      damping: 0.5,
     };
 
   } // end constructor
-
-  componentWillUnmount(){
-    this.setState({number: myvar++})
+  componentDidMount(){
+    this.fillColor();
   }
-  onPress(name) {
+  componentWillUnmount(){
+  }
+  fillColor(){
+    //colorPicks: ['hsl(180, 50%, 50%)','blue','red','blue'],
+    //rgb(255, 255, 255)
+    var colorPicks = [];
+    for(var i = 0; i < colors.length; i=i+3){
+      colorPicks.push('rgb(' + colors[i] + ',' + colors[i+1] + ',' + colors[i+2] + ')')
+    }
+    console.log(colorPicks)
+    this.setState({colorPicks: colorPicks})
+  }
+  onPressNewImage(name) {
     //alert(`Button ${name} pressed`);
     let msgData = {};
     msgData.targetFunc = "clearImage"
     msgData.targetFuncData = "input data 101"
     this.myWebView.postMessage(JSON.stringify(msgData))
   }
-  showPress(name) {
-    //alert(`Button ${name} pressed`);
-    let msgData = {};
-    msgData.targetFunc = "showImage"
-    msgData.targetFuncData = "input data 101"
-    this.myWebView.postMessage(JSON.stringify(msgData))
-  }
   sayHi(input){
-    console.log('Hi from DrawCard')
-    //console.log(input.data.mydata)
-    //imageUri = "data:image/png;base64," + input.data.mydata;
-    //uri = {uri: imageUri}
-    //this.setState({showImg: true,//!this.state.showImg,
-      //img:  imageUri//input.data.mydata
-    //})
-    //{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}
-    //var source={uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg=='};
-    //this.state.drawings.push(source);
-    var source = {uri: input.data.mydata};
-    this.state.drawings.push(source);
-    this.setState({number: myvar++})
+    //console.log('Hi from FreeSketchCard')
+
     return 'return from Hi'
   }
 
   onWebViewMessage(event) {
        console.log('onWebViewMessage')
-       //console.log(this.myWebView)
-       //console.log(this.refs)
-       //console.log(event)
-       //return;
+
        // post back reply as soon as possible to enable sending the next message
        this.myWebView.postMessage(event.nativeEvent.data);
 
@@ -90,33 +103,23 @@ export default class DrawCard extends Component {
        }
 
        // invoke target function
-       //console.log(msgData.data)
-       //console.log(msgData.targetFunc)
        const response = this[msgData.targetFunc].apply(this, [msgData]);
        msgData.targetFunc = null;
-       //console.log(response)
+
        // trigger success callback
        msgData.isSuccessful = true;
        msgData.args = [response];
-       //this.myWebView.postMessage(msgData)
-       //console.log(JSON.stringify(msgData))
+
        this.myWebView.postMessage(JSON.stringify(msgData))
   }
 
   render() {
-    console.log('render DrawCard')
-    //ref={webview => { this.myWebView = webview; }}
-    //ref={(ref) => { this.myWebView = ref; }}
-    //ref="myWebView"
-    var code = "var para = document.createElement('p');para.appendChild(document.createTextNode('" + this.state.number + "'));document.body.appendChild(para);";
     return (
       <View style={{flex: 1}}>
         <WebView
           style={{flex: 1}}
           ref={webview => { this.myWebView = webview; }}
           source={require('./FreeSketch.html')}
-          //source= {{html: HTMLC}}
-          injectedJavaScript={code}
           javaScriptEnabled={true}
           javaScriptEnabledAndroid={true}
           scrollEnabled={false}
@@ -144,57 +147,56 @@ export default class DrawCard extends Component {
               <View style={styles.panelHeader}>
                 <View style={styles.panelHandle} />
               </View>
+              {this.renderColorPicks()}
               <Text style={styles.panelTitle}>Slider</Text>
-              <View style={styles.panelButton}>
-                <TouchableOpacity onPress={this.onPress.bind(this, 'button1')}>
-                  <Text style={styles.panelButtonTitle}>Clear Image</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.panelButton}>
-                <TouchableOpacity onPress={this.showPress.bind(this, 'button2')}>
-                  <Text style={styles.panelButtonTitle}>Show Image</Text>
-                </TouchableOpacity>
-              </View>
-              <Image
-                style={{width: 50, height: 50}}
-                source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
+              <Slider
+                key='damping'
+                style={styles.slider}
+                value={this.state.damping}
+                minimumValue={0.1}
+                maximumValue={0.6}
+                minimumTrackTintColor={'#007AFF'}
+                maximumTrackTintColor={'white'}
+                thumbTintColor={'white'}
+                onSlidingComplete={(value) => this.setState({damping: value})}
               />
-              {
-                this.state.drawings.map((d, index) =>{
-                  return(
-                      <Image style={styles.photo} key={index} source={d} />
-                    )
-                })
-              }
+              <View style={styles.panelButton}>
+                <TouchableOpacity onPress={this.onPressNewImage.bind(this)}>
+                  <Text style={styles.panelButtonTitle}>New Drawing</Text>
+                </TouchableOpacity>
+              </View>
+
             </View>
           </Interactable.View>
         </View>
       </View>
     );
   } // end render
-  renderPhoto(){
-    if(this.state.showImg)
-      //console.log(this.state.img)
-      return(
-        <Image style={styles.photo} source={this.state.img} />
-      )
-  }
-  renderDrawings(){
-    var img = this.state.img;
-    //this.state.drawings.map((d, index) =>{
-      //console.log('renderDrawings ' + index)
-      //console.log(d)
-      return(
-          <Image style={styles.photo} source={img} />
+  renderColorPicks(){
+    return(
+      <View style={styles.colorPickMenu}>
+      {
+        this.state.colorPicks.map((d, index) =>{
+              return(
+                  <Image style={{ margin: 5,
+                                  width: width/8,
+                                  height: width/8,
+                                  alignItems: 'center',
+                                  borderWidth: 3,
+                                  borderColor: 'black',
+                                  borderRadius: width/16,
+                                  tintColor: this.state.colorPicks[index]}} 
+                    key={index} source={circle} />
+                )
+            })
+      }
+      </View>
+    );
+  } // end renderColorPicks
+} // end FreeSketchCard
 
-        )
-    //})
-  }
-}
-/*
-        */
-// {this.renderDrawings()}
-// <Image style={styles.photo} key={index} source={d} />
+/**/
+
 
 const styles = StyleSheet.create({
   container: {
@@ -261,5 +263,11 @@ const styles = StyleSheet.create({
   map: {
     height: Screen.height,
     width: Screen.width
+  },
+  colorPickMenu:{
+    padding: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   }
 });

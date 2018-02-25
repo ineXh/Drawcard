@@ -20,6 +20,7 @@ import {
 import IntroCard from './src/IntroCard';
 import DrawCard from './src/DrawCard';
 //import ChatHeads from './src/ChatHeads';
+import FreeSketchCard from './src/FreeSketchCard';
 import FetchCard from './src/FetchCard';
 import FetchDrawCard from './src/FetchDrawCard';
 import GalleryCard from './src/GalleryCard';
@@ -99,7 +100,7 @@ export default class App extends Component<{}> {
           <Text style={styles.button}>Pixel Draw</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}
-          onPress={this.onButtonPress.bind(this, DrawCard, undefined)}>
+          onPress={this.onButtonPress.bind(this, FreeSketchCard, undefined)}>
           <Text style={styles.button}>Free Sketch</Text>
         </TouchableOpacity>
       </View>
