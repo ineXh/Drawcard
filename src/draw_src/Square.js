@@ -21,6 +21,8 @@ Square.prototype = {
 		if(this.hide) return;
 		fill(this.hue, this.sat, this.bright);
 		ellipse(this.x, this.y, this.s, this.s);
+		//tint(this.hue, this.sat, this.bright);
+		//image(imgCircle, this.x, this.y, this.s, this.s);
 		fill(0);
 		if(this.label != undefined) text(this.label, this.x, this.y+6);
 	}

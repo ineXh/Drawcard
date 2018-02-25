@@ -41,13 +41,14 @@ var spliceOne = function(arr, index) {
 var dominantHue;
 var dominantHueGreater5 = false;
 var dominantHueEdge = false;
-var hueRange = 255;
+var hueRange = 360;
+var brightRange = 4;
 var maxHueChoice = 10;
 var dominantSaturation;
 var dominantBrightness;
 var dominantHues = {};
-var dominantSatuations = {};
-var dominantBrightnesses = {};
+//var dominantSatuations = {};
+//var dominantBrightnesses = {};
 function ColorHSB(h, s, b){
   this.create(h, s, b);
 }
@@ -58,6 +59,52 @@ ColorHSB.prototype = {
     this.b = b;
   },
 } // end ColorHSB
+function hslToRgb(h, s, l){
+    var r, g, b;
+
+    if(s == 0){
+        r = g = b = l; // achromatic
+    }else{
+        var hue2rgb = function hue2rgb(p, q, t){
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+function rgbToHsl(r, g, b){
+    r /= 255, g /= 255, b /= 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+
+    if(max == min){
+        h = s = 0; // achromatic
+    }else{
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max){
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    gHue = h;
+    gSat = s;
+    gBright = l;
+    return [h, s, l];
+}
 var gHue, gSat, gBright;
 function RGBtoHSB(r, g, b) {
     var cmax = (r > g) ? r : g;
@@ -118,11 +165,12 @@ function extractColorFromImageXY(img, x1, y1, x2, y2, extractImageType) {
       g = img.pixels[index+1]
       b = img.pixels[index+2]
       a = img.pixels[index+3]
-      RGBtoHSB(r, g, b);
-      var HUE = Math.ceil(gHue*255);
+      var arrHSL = rgbToHsl(r, g, b); //RGBtoHSB
+
+      var HUE = Math.ceil(arrHSL[0]*hueRange); //Math.ceil(gHue*255);
       if(HUE == 0 && a == 0) HUE = -1; // Blank space
-      var SAT = gSat;
-      var BRIGHT = gBright;
+      var SAT = gSat*hueRange;
+      var BRIGHT = gBright*hueRange;
       if(hues[HUE] == undefined || isNaN(HUE)){
         hues[HUE] = 0;
         saturations[HUE] = 0;
@@ -144,7 +192,10 @@ function extractColorFromImageXY(img, x1, y1, x2, y2, extractImageType) {
       dominantHues = {}
       dominantSatuations = {}
       dominantBrightnesses = {}
-      for(var i = arr.length-1; i > arr.length-(maxHueChoice+1) && i >= 0; i--){
+      for(var i = arr.length-1;
+        i >= 0
+        && i > arr.length-(maxHueChoice+1)
+        ; i--){
         var count = arr[i];
         var hueIndex = swapped[count];
         dominantHues[hueIndex] = {
@@ -171,7 +222,7 @@ function extractColorFromImageXY(img, x1, y1, x2, y2, extractImageType) {
       }
     break;
   }
-
+  //debugger;
   var hsb = new ColorHSB(HUE,
     saturations[HUE] / hueCount, brightnesses[HUE] / hueCount);
 

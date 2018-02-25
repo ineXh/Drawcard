@@ -1,6 +1,7 @@
 var img;
 var imgZoomIn;
 var imgZoomOut;
+var imgCircle;
 var buttonZoomIn;
 var buttonZoomOut;
 var urlImage;
@@ -8,6 +9,7 @@ var pgDrawing;
 var buttons = [];
 var buttonTranslateX;
 var poop = [];
+var poopList = {};
 var poopTranslateX;
 var poopTranslateY;
 var screenCurrentTranslateX = 0;
@@ -23,14 +25,15 @@ var screenCenterX = 0;
 var screenCenterY = 0;
 
 var mult = 4;
-var side = 16;//6*mult;
+var side = 64;//6*mult;
 var outWidth;// = 128*mult;
 var outHeight;// = 128*mult;
 
 function preload() {
 	imgZoomIn = loadImage("./../assets/zoomin.png");
 	imgZoomOut = loadImage("./../assets/zoomout.png");
-	//img = loadImage("./../assets/whole.png");
+	//imgCircle = loadImage("./../assets/circle.png");
+	img = loadImage("./../assets/whole.png");
 	//img = loadImage("./../assets/airport-photo.jpg");
 }
 
@@ -38,10 +41,11 @@ function setup() {
 	window.scrollTo(0,1);
 	document.body.style.overflow = 'hidden';
 	createCanvas(window.innerWidth, window.innerHeight);
+	//createCanvas(300, 300);
 	background(255);
 	imageMode(CORNER);
 	ellipseMode(CENTER);
-	colorMode(HSB, 255);
+	colorMode(HSL, hueRange);
 	noStroke();
 	textSize(24);
 
@@ -112,8 +116,8 @@ function setupImage(img){
 
 		//console.log('hue ' + hue)
 		colors.push(hue)
-		colors.push(dominantHues[hue].saturation/255)
-		colors.push(dominantHues[hue].brightness/255)
+		colors.push(dominantHues[hue].saturation/hueRange)
+		colors.push(dominantHues[hue].brightness/hueRange)
 		var button = new Button();
 		if(i < 6){
 			x = i*width*0.15
@@ -128,6 +132,8 @@ function setupImage(img){
 			color(hue, dominantHues[hue].saturation, dominantHues[hue].brightness)
 			);
 		button.hue = hue;
+		button.saturation = dominantHues[hue].saturation;
+		button.brightness = dominantHues[hue].brightness;
 		//fill(hue, dominantHues[hue].saturation, dominantHues[hue].brightness);
 		//ellipse(width/3 + i*width/20, height*3/4, 30, 30);
 		i++;
@@ -135,10 +141,12 @@ function setupImage(img){
 	}
 	sendMsg('giveColor', colors.toString(), null);
 
-
-	buttonTranslateX = (1-buttons[5].pos.x/width)/2 * width;
+	if(buttons.length >= 6) buttonTranslateX = (1-buttons[5].pos.x/width)/2 * width;
+	else buttonTranslateX = (1-buttons[buttons.length-1].pos.x/width)/2 * width;
 	screenInitialTranslateX = (width-img.width)/2;
 	screenTotalTranslateX = screenInitialTranslateX;
+	screenInitialTranslateY = height/10;
+	screenTotalTranslateY = screenInitialTranslateY;
 	finishedSetup = true;
 	noLoop();
 } // end setupImage
@@ -146,7 +154,7 @@ function setupImage(img){
 function draw(){
 	colorMode(RGB, 255);
 	background(126,176,229);
-	colorMode(HSB, 255);
+	colorMode(HSL, hueRange);
 	//image(pgDrawing, 0, 0, pgDrawing.width, pgDrawing.height);
 	if(img) setupImage(img);
 	push();
@@ -188,6 +196,7 @@ function mouseClicked() {
 	for (var i = 0; i < buttons.length; i++) {
 	    var button = buttons[i];
 	    if(button.pressed(mouseX - buttonTranslateX, mouseY)){
+	    	//console.log(button)
 	    	//console.log('pressed ' + i)
 	    	var hue = button.hue;
 	    	//var hue = Object.keys(dominantHues)[i];
@@ -315,12 +324,32 @@ function drawImage(){
       			var C1 = new Square(x, y, w, hsb.h,
       				dominantHues[hsb.h].saturation, dominantHues[hsb.h].brightness);
       			//var C1 = new Square(x, y, w, hsb.h, hsb.s, hsb.b);
-      			//debugger;
+      			if(poopList[hsb.h] == undefined){
+      				poopList[hsb.h] = {};
+      				for(var m = 0; m < brightRange; m++){
+      					poopList[hsb.h]['bright' + m] = [];
+      				}
+      			}
+      			var n = Math.floor(hsb.b / (hueRange/brightRange))
+      			if(n == brightRange) n -= 1;
+      			poopList[hsb.h]['bright' + n].push(poop.length);
       			if(dominantHues[hsb.h].indices == undefined) dominantHues[hsb.h].indices = [];
       			dominantHues[hsb.h].indices.push(poop.length);
       		}else{
       			//console.log("Dominant Hues, Diff Brightness: " + hsb.h + ", " + (hsb.b-dominantHues[hsb.h].brightness))
       			var C1 = new Square(x, y, w, hsb.h, hsb.s, hsb.b);
+      			//debugger;
+      			//var C1 = new Square(x, y, w, hsb.h,
+      			//	dominantHues[hsb.h].saturation, dominantHues[hsb.h].brightness);
+      			if(poopList[hsb.h] == undefined){
+      				poopList[hsb.h] = {};
+      				for(var m = 0; m < brightRange; m++){
+      					poopList[hsb.h]['bright' + m] = [];
+      				}
+      			}
+      			var n = Math.floor(hsb.b / (hueRange/brightRange))
+      			if(n == brightRange) n -= 1;
+      			poopList[hsb.h]['bright' + n].push(poop.length);
       			if(dominantHues[hsb.h].diffBrightnessIndices == undefined) dominantHues[hsb.h].diffBrightnessIndices = [];
       			dominantHues[hsb.h].diffBrightnessIndices.push(poop.length);
       		}
@@ -341,7 +370,7 @@ function drawImage(){
       		var C1 = new Square(x, y, w, hsb.h, hsb.s, hsb.b);
       		//var C1 = new Square(x, y, w, lastHueIndex,
       		//		dominantHues[lastHueIndex].saturation, dominantHues[lastHueIndex].brightness);
-      		//console.log("not dominant Hues: " + hsb.h)
+      		console.log("not dominant Hues: " + hsb.h + ", becomes " + lastHueIndex)
       		if(dominantHues[lastHueIndex].indices == undefined) dominantHues[lastHueIndex].indices = [];
       		dominantHues[lastHueIndex].indices.push(poop.length);
       		//dominantHues[1000].indices.push(poop.length);
@@ -361,7 +390,7 @@ var takeImage = function(receiveData){
 	img = loadImage(receiveData);
 }
 var sendMsg = function(targetFunc, sendData, receiveCallback){
-	centerText("send Msg", width/2, height*1/4);
+	//centerText("send Msg", width/2, height*1/4);
 	webViewBridge.send(
 	    targetFunc,
 	    {mydata: sendData},

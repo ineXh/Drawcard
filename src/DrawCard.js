@@ -114,7 +114,7 @@ export default class DrawCard extends Component {
         <WebView
           style={{flex: 1}}
           ref={webview => { this.myWebView = webview; }}
-          source={require('./draw.html')}
+          source={require('./FreeSketch.html')}
           //source= {{html: HTMLC}}
           injectedJavaScript={code}
           javaScriptEnabled={true}

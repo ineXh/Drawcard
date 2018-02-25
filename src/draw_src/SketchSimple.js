@@ -2,7 +2,7 @@ var bunnyImage;
 var urlImage;
 var sendButton;
 function preload() {
-	bunnyImage = loadImage("./../assets/bunny.png");
+	urlImage = loadImage("./../assets/bunny.png");
 }
 
 function setup() {
