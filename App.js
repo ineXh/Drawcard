@@ -100,7 +100,7 @@ export default class App extends Component<{}> {
           <Text style={styles.button}>Pixel Draw</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}
-          onPress={this.onButtonPress.bind(this, DrawCard, undefined)}>
+          onPress={this.onButtonPress.bind(this, FreeSketchCard, undefined)}>
           <Text style={styles.button}>Free Sketch</Text>
         </TouchableOpacity>
       </View>

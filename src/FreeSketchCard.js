@@ -84,7 +84,6 @@ export default class FreeSketchCard extends Component {
   }
   sayHi(input){
     //console.log('Hi from FreeSketchCard')
-
     return 'return from Hi'
   }
 
@@ -129,7 +128,34 @@ export default class FreeSketchCard extends Component {
           style={{marginTop: 0}}
           onMessage={this.onWebViewMessage.bind(this)}/>
 
-        <View style={styles.panelContainer} pointerEvents={'box-none'}>
+      </View>
+    );
+  } // end render
+  renderColorPicks(){
+    return(
+      <View style={styles.colorPickMenu}>
+      {
+        this.state.colorPicks.map((d, index) =>{
+              return(
+                  <Image style={{ margin: 5,
+                                  width: Screen.width/8,
+                                  height: Screen.width/8,
+                                  alignItems: 'center',
+                                  borderWidth: 3,
+                                  borderColor: 'black',
+                                  borderRadius: Screen.width/16,
+                                  tintColor: this.state.colorPicks[index]}} 
+                    key={index} source={circle} />
+                )
+            })
+      }
+      </View>
+    );
+  } // end renderColorPicks
+} // end FreeSketchCard
+
+/*
+<View style={styles.panelContainer} pointerEvents={'box-none'}>
           <Animated.View
             pointerEvents={'box-none'}
             style={[styles.panelContainer, {
@@ -172,33 +198,8 @@ export default class FreeSketchCard extends Component {
             </View>
           </Interactable.View>
         </View>
-      </View>
-    );
-  } // end render
-  renderColorPicks(){
-    return(
-      <View style={styles.colorPickMenu}>
-      {
-        this.state.colorPicks.map((d, index) =>{
-              return(
-                  <Image style={{ margin: 5,
-                                  width: Screen.width/8,
-                                  height: Screen.width/8,
-                                  alignItems: 'center',
-                                  borderWidth: 3,
-                                  borderColor: 'black',
-                                  borderRadius: Screen.width/16,
-                                  tintColor: this.state.colorPicks[index]}} 
-                    key={index} source={circle} />
-                )
-            })
-      }
-      </View>
-    );
-  } // end renderColorPicks
-} // end FreeSketchCard
-
-/**/
+        
+*/
 
 
 const styles = StyleSheet.create({
