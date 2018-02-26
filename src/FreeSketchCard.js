@@ -159,17 +159,9 @@ export default class FreeSketchCard extends Component {
               </View>
               {this.renderColorPicks()}
               <Text style={styles.panelTitle}>Slider</Text>
-              <Slider
-                key='damping'
-                style={styles.slider}
-                value={this.state.damping}
-                minimumValue={0.0}
-                maximumValue={255.0}
-                minimumTrackTintColor={'#000000'}
-                maximumTrackTintColor={'#FF0000'}
-                thumbTintColor={'red'}
-                onSlidingComplete={(value) => this.setState({damping: value})}
-              />
+              {this.renderSlider(0)}
+              {this.renderSlider(1)}
+              {this.renderSlider(2)}
               <View style={styles.panelButton}>
                 <TouchableOpacity onPress={this.onPressNewImage.bind(this)}>
                   <Text style={styles.panelButtonTitle}>New Drawing</Text>
@@ -184,6 +176,45 @@ export default class FreeSketchCard extends Component {
       </View>
     );
   } // end render
+  renderSlider(input){
+    switch(input){
+      case 0:
+        var c = this.state.red.toString(16);
+        if(c.length < 2) c = '0' + c;
+        var colorString = '#' + c + '0000'
+        var color = 'red'
+      break;
+      case 1:
+        var c = this.state.green.toString(16);
+        if(c.length < 2) c = '0' + c;
+        var colorString = '#00' + c + '00'
+        var color = 'green'
+      break;
+      case 2:
+        var c = this.state.blue.toString(16);
+        if(c.length < 2) c = '0' + c;
+        var colorString = '#0000' + c
+        var color = 'blue'
+      break;
+    }
+    return(
+      <Slider
+          key='damping'
+          style={styles.slider}
+          value={this.state.damping}
+          minimumValue={0.0}
+          maximumValue={255.0}
+          minimumTrackTintColor={'black'}
+          maximumTrackTintColor={colorString}
+          thumbTintColor={color}
+          onSlidingComplete={function(value){
+            var stateObj = {};
+            stateObj[color] = value;
+            this.setState(stateObj)
+          }}
+        />
+    )
+  }// end renderRedSlider
   renderColorPicks(){
     return(
       <View style={styles.colorPickMenu}>
