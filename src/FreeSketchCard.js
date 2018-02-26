@@ -19,7 +19,11 @@ const Screen = {
 }
 const circle = require('./../assets/circle.png')
 const colors = [
-0  , 0  , 0  ,
+//0  , 0  , 0  ,
+255, 0  , 0  ,
+0  , 255, 0  ,
+0  , 0  , 255,
+/*
 127, 127, 127,
 136, 0  , 21 ,
 255, 255, 255,
@@ -56,6 +60,9 @@ export default class FreeSketchCard extends Component {
     this._deltaY = new Animated.Value(Screen.height-100);
     this.state = {
       colorPicks: [],
+      red: 255,
+      green: 255,
+      blue: 255,
       damping: 0.5,
     };
 
@@ -156,11 +163,11 @@ export default class FreeSketchCard extends Component {
                 key='damping'
                 style={styles.slider}
                 value={this.state.damping}
-                minimumValue={0.1}
-                maximumValue={0.6}
-                minimumTrackTintColor={'#007AFF'}
-                maximumTrackTintColor={'white'}
-                thumbTintColor={'white'}
+                minimumValue={0.0}
+                maximumValue={255.0}
+                minimumTrackTintColor={'#000000'}
+                maximumTrackTintColor={'#FF0000'}
+                thumbTintColor={'red'}
                 onSlidingComplete={(value) => this.setState({damping: value})}
               />
               <View style={styles.panelButton}>
