@@ -157,11 +157,12 @@ export default class FreeSketchCard extends Component {
               <View style={styles.panelHeader}>
                 <View style={styles.panelHandle} />
               </View>
-              {this.renderColorPicks()}
-              <Text style={styles.panelTitle}>Slider</Text>
-              {this.renderSlider(0)}
-              {this.renderSlider(1)}
-              {this.renderSlider(2)}
+              {/*this.renderColorPicks()*/}
+              <Text style={styles.playgroundLabel}>Color</Text>
+                  {this.renderSlider(0)}
+                  {this.renderSlider(1)}
+                  {this.renderSlider(2)}
+
               <View style={styles.panelButton}>
                 <TouchableOpacity onPress={this.onPressNewImage.bind(this)}>
                   <Text style={styles.panelButtonTitle}>New Drawing</Text>
@@ -177,29 +178,33 @@ export default class FreeSketchCard extends Component {
     );
   } // end render
   renderSlider(input){
+    var color = ''
     switch(input){
       case 0:
         var c = this.state.red.toString(16);
         if(c.length < 2) c = '0' + c;
         var colorString = '#' + c + '0000'
-        var color = 'red'
+        color = 'red'
       break;
       case 1:
         var c = this.state.green.toString(16);
         if(c.length < 2) c = '0' + c;
         var colorString = '#00' + c + '00'
-        var color = 'green'
+        color = 'green'
       break;
       case 2:
         var c = this.state.blue.toString(16);
         if(c.length < 2) c = '0' + c;
         var colorString = '#0000' + c
-        var color = 'blue'
+        color = 'blue'
       break;
     }
+    //console.log(colorString)
+    //console.log(c)
+    var component = this;
     return(
       <Slider
-          key='damping'
+          key={color}
           style={styles.slider}
           value={this.state.damping}
           minimumValue={0.0}
@@ -207,10 +212,11 @@ export default class FreeSketchCard extends Component {
           minimumTrackTintColor={'black'}
           maximumTrackTintColor={colorString}
           thumbTintColor={color}
-          onSlidingComplete={function(value){
+          onValueChange={function(value){
             var stateObj = {};
-            stateObj[color] = value;
-            this.setState(stateObj)
+            stateObj[color] = Math.round(value);
+            //console.log(stateObj)
+            component.setState(stateObj)
           }}
         />
     )
@@ -269,7 +275,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000000',
     shadowOffset: {width: 0, height: 0},
     shadowRadius: 5,
-    shadowOpacity: 0.4
+    shadowOpacity: 0.4,
+    /*flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#efefef',*/
   },
   panelHeader: {
     alignItems: 'center'
@@ -317,5 +327,31 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
+  },
+  playgroundContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#efefef'
+  },
+  playgroundLabel: {
+    color: 'white',
+    fontSize: 14,
+    backgroundColor: '#5894f3',
+    fontWeight: 'bold',
+    marginBottom: 15,
+    padding: 5,
+
+  },
+  playground: {
+    marginTop: Screen.height <= 500 ? 10 : 20,
+    padding: 20,
+    width: Screen.width - 40,
+    backgroundColor: '#5894f3',
+    alignItems: 'stretch'
+  },
+  slider: {
+    /*height: 40*/
   }
+
 });
