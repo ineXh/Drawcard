@@ -25,7 +25,7 @@ var screenCenterX = 0;
 var screenCenterY = 0;
 
 var mult = 4;
-var side = 64;//6*mult;
+var side = 8;//6*mult;
 var outWidth;// = 128*mult;
 var outHeight;// = 128*mult;
 

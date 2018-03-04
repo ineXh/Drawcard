@@ -8,6 +8,7 @@ import {
   WebView,
   Slider,
   Dimensions,
+  Alert,
   Animated, TouchableOpacity
 } from 'react-native';
 
@@ -193,7 +194,9 @@ export default class FreeSketchCard extends Component {
           />
             <Interactable.View
             verticalOnly={true}
-            snapPoints={[{y: Screen.height/5}, {y: Screen.height-10}]}
+            snapPoints={[{y: Screen.height/5},
+                         {y: Screen.height/2},
+                         {y: Screen.height-10}]}
             boundaries={{top: -300}}
             initialPosition={{y: Screen.height-10}}
             animatedValueY={this._deltaY}>
@@ -203,7 +206,7 @@ export default class FreeSketchCard extends Component {
                 </View>
                 {/*this.renderColorPicks()*/}
                 <View style={styles.playgroundContainer}>
-                  <Text style={styles.playgroundLabel}>Color</Text>
+                  <Text style={styles.playgroundLabel}>Paint Color</Text>
                   <Image style={{ marginLeft: 10,
                                       width: Screen.width/15,
                                       height: Screen.width/15,
@@ -218,44 +221,35 @@ export default class FreeSketchCard extends Component {
                 {this.renderColorSlider(1)}
                 {this.renderColorSlider(2)}
                 <View style={styles.playgroundContainer}>
-                  <Text style={styles.playgroundLabel}>Stroke</Text>
+                  <Text style={styles.playgroundLabel}>Brush Size</Text>
                   {this.renderStrokeSlider(0)}
                   <Text style={styles.playgroundLabelRight}>{this.state.stroke}</Text>
                 </View>
 
                 <View style={styles.playgroundContainer}>
-                  <Text style={styles.playgroundLabel}>Buttons</Text>
+                  <Text style={styles.playgroundLabel}>Menu</Text>
                   <TouchableOpacity onPress={this.onPressNewDrawing.bind(this)}>
-                    <Image style={{ marginLeft: 10,
-                                      width: Screen.width/10,
-                                      height: Screen.width/10,
-                                      alignItems: 'center',
-                                      borderWidth: 1,
-                                      borderColor: 'black',
-                                      borderRadius: Screen.width/18,
-                                      tintColor: this.state.color}}
+                    <Image style={{   margin: 4,
+                                      marginLeft: 10,
+                                      width: Screen.width/12,
+                                      height: Screen.width/12,
+                                      alignItems: 'center'}}
                                       source={iconNewFile} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={this.onPressUndo.bind(this)}>
-                    <Image style={{ marginLeft: 10,
-                                      width: Screen.width/10,
-                                      height: Screen.width/10,
-                                      alignItems: 'center',
-                                      borderWidth: 1,
-                                      borderColor: 'black',
-                                      borderRadius: Screen.width/18,
-                                      tintColor: this.state.color}}
+                    <Image style={{   margin: 4,
+                                      marginLeft: 10,
+                                      width: Screen.width/12,
+                                      height: Screen.width/12,
+                                      alignItems: 'center'}}
                                       source={iconUndo} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={this.onPressRedo.bind(this)}>
-                    <Image style={{ marginLeft: 10,
-                                      width: Screen.width/10,
-                                      height: Screen.width/10,
-                                      alignItems: 'center',
-                                      borderWidth: 1,
-                                      borderColor: 'black',
-                                      borderRadius: Screen.width/18,
-                                      tintColor: this.state.color}}
+                    <Image style={{   margin: 4,
+                                      marginLeft: 10,
+                                      width: Screen.width/12,
+                                      height: Screen.width/12,
+                                      alignItems: 'center'}}
                                       source={iconRedo} />
                   </TouchableOpacity>
                 </View>
@@ -414,7 +408,7 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: '#00000040',
-    marginBottom: 5
+    marginBottom: 2
   },
   panelTitle: {
     fontSize: 27,
@@ -448,13 +442,14 @@ const styles = StyleSheet.create({
     width: Screen.width
   },
   colorPickMenu:{
-    padding: 10,
+    padding: 5,
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   playgroundContainer: {
     /*justifyContent: 'center',*/
+    margin: 5,
     alignItems: 'center',
     backgroundColor: '#5894f3',
     flexDirection: 'row',

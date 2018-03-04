@@ -282,7 +282,10 @@ export default class GalleryCard extends Component {
           }]} />
           <Interactable.View
             verticalOnly={true}
-            snapPoints={[{y: Screen.height/4}, {y: Screen.height-10}]}
+            snapPoints={[ {y: Screen.height/4},
+                          {y: Screen.height*0.75},
+                          {y: Screen.height*0.475},
+                          {y: Screen.height-10}]}
             boundaries={{top: -300}}
             initialPosition={{y: Screen.height-10}}
             animatedValueY={this._deltaY}>
@@ -361,7 +364,7 @@ export default class GalleryCard extends Component {
       <Slider
           style={{ margin: 5,
                   width: Screen.width/2}}
-          value={2}
+          value={6}
           minimumValue={1.0}
           maximumValue={10.0}
           minimumTrackTintColor={'black'}
@@ -437,7 +440,7 @@ const styles = StyleSheet.create({
   panel: {
     height: Screen.height + 300,
     padding: 20,
-    backgroundColor: '#f7f5eee8',
+    backgroundColor: '#f7f5eeaa',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000000',
@@ -453,7 +456,7 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: '#00000040',
-    marginBottom: 10
+    marginBottom: 5
   },
   panelTitle: {
     fontSize: 27,
