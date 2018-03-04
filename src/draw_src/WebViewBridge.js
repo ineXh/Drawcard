@@ -146,6 +146,7 @@ Document deletes message callbacks
                }
                delete callbacks[message.msgId];
            }
+          // Run functions on Web called from React
           // Target Function
           if(message.targetFunc){
             window[message.targetFunc].apply(this, [message.targetFuncData]);

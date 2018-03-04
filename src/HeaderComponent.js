@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     height: 60,
     paddingTop: 0,
     paddingLeft: 20,
- 	paddingRight: 20,
+ 	  paddingRight: 20,
     flexDirection: 'row',
     backgroundColor: '#f99595',
     alignItems: 'center',

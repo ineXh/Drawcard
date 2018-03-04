@@ -60,10 +60,12 @@ export default class FreeSketchCard extends Component {
     this._deltaY = new Animated.Value(Screen.height-100);
     this.state = {
       colorPicks: [],
-      red: 255,
-      green: 255,
-      blue: 255,
-      damping: 0.5,
+      red: 0,
+      green: 0,
+      blue: 0,
+      color: 'rgb(0, 0, 0)',
+      damping: 1.0,
+      stroke: 15
     };
 
   } // end constructor
@@ -82,11 +84,34 @@ export default class FreeSketchCard extends Component {
     //console.log(colorPicks)
     this.setState({colorPicks: colorPicks})
   }
-  onPressNewImage(name) {
+  sendColor(){
+    this.setState({color: 'rgb(' + 
+      this.state.red + ', ' + this.state.green + ', ' + this.state.blue + ')'})
+    let msgData = {};
+    msgData.targetFunc = "changeColor"
+    msgData.targetFuncData = this.state.red + ', ' + this.state.green + ', ' + this.state.blue;
+    this.myWebView.postMessage(JSON.stringify(msgData))
+  }
+  sendStroke(){
+    let msgData = {};
+    msgData.targetFunc = "changeStroke"
+    msgData.targetFuncData = this.state.stroke;
+    this.myWebView.postMessage(JSON.stringify(msgData))
+  }
+  onPressNewDrawing(name) {
     //alert(`Button ${name} pressed`);
     let msgData = {};
     msgData.targetFunc = "clearImage"
-    msgData.targetFuncData = "input data 101"
+    this.myWebView.postMessage(JSON.stringify(msgData))
+  }
+  onPressUndo(){
+    let msgData = {};
+    msgData.targetFunc = "pressUndo"
+    this.myWebView.postMessage(JSON.stringify(msgData))
+  }
+  onPressScreenshot(){
+    let msgData = {};
+    msgData.targetFunc = "screenshot"
     this.myWebView.postMessage(JSON.stringify(msgData))
   }
   sayHi(input){
@@ -158,14 +183,35 @@ export default class FreeSketchCard extends Component {
                 <View style={styles.panelHandle} />
               </View>
               {/*this.renderColorPicks()*/}
-              <Text style={styles.playgroundLabel}>Color</Text>
-                  {this.renderSlider(0)}
-                  {this.renderSlider(1)}
-                  {this.renderSlider(2)}
-
+              <View style={styles.playgroundContainer}>
+                <Text style={styles.playgroundLabel}>Color</Text>
+                <Image style={{ marginLeft: 10,
+                                    width: Screen.width/15,
+                                    height: Screen.width/15,
+                                    alignItems: 'center',
+                                    borderWidth: 1,
+                                    borderColor: 'black',
+                                    borderRadius: Screen.width/18,
+                                    tintColor: this.state.color}} 
+                                    source={circle} />
+              </View>
+              
+                  {this.renderColorSlider(0)}
+                  {this.renderColorSlider(1)}
+                  {this.renderColorSlider(2)}
+              <View style={styles.playgroundContainer}>
+                <Text style={styles.playgroundLabel}>Stroke</Text>
+                {this.renderStrokeSlider(0)}
+                <Text style={styles.playgroundLabelRight}>{this.state.stroke}</Text>
+              </View>
               <View style={styles.panelButton}>
-                <TouchableOpacity onPress={this.onPressNewImage.bind(this)}>
+                <TouchableOpacity onPress={this.onPressNewDrawing.bind(this)}>
                   <Text style={styles.panelButtonTitle}>New Drawing</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.panelButton}>
+                <TouchableOpacity onPress={this.onPressUndo.bind(this)}>
+                  <Text style={styles.panelButtonTitle}>Undo</Text>
                 </TouchableOpacity>
               </View>
 
@@ -177,25 +223,28 @@ export default class FreeSketchCard extends Component {
       </View>
     );
   } // end render
-  renderSlider(input){
+  renderColorSlider(input){
     var color = ''
     switch(input){
       case 0:
         var c = this.state.red.toString(16);
         if(c.length < 2) c = '0' + c;
-        var colorString = '#' + c + '0000'
+        //var colorString = '#' + c + '0000'
+        var colorString = '#FF0000'
         color = 'red'
       break;
       case 1:
         var c = this.state.green.toString(16);
         if(c.length < 2) c = '0' + c;
-        var colorString = '#00' + c + '00'
+        //var colorString = '#00' + c + '00'
+        var colorString = '#00FF00'
         color = 'green'
       break;
       case 2:
         var c = this.state.blue.toString(16);
         if(c.length < 2) c = '0' + c;
-        var colorString = '#0000' + c
+        //var colorString = '#0000' + c
+        var colorString = '#0000FF'
         color = 'blue'
       break;
     }
@@ -206,21 +255,53 @@ export default class FreeSketchCard extends Component {
       <Slider
           key={color}
           style={styles.slider}
-          value={this.state.damping}
+          value={0}
           minimumValue={0.0}
           maximumValue={255.0}
           minimumTrackTintColor={'black'}
           maximumTrackTintColor={colorString}
           thumbTintColor={color}
+          onSlidingComplete = {function(value){
+            component.sliderColorUpdate(color, value)            
+          }}
           onValueChange={function(value){
-            var stateObj = {};
-            stateObj[color] = Math.round(value);
-            //console.log(stateObj)
-            component.setState(stateObj)
+            component.sliderColorUpdate(color, value)            
           }}
         />
     )
-  }// end renderRedSlider
+  }// end renderColorSlider
+  sliderColorUpdate(color, value){
+    var stateObj = {};
+    stateObj[color] = Math.round(value);
+    //console.log(stateObj)
+    this.setState(stateObj)
+    this.sendColor()
+  }
+  renderStrokeSlider(){
+    var component = this;
+    return(
+      <Slider
+          style={{ margin: 5,
+                  width: Screen.width/2}}
+          value={15}
+          minimumValue={5.0}
+          maximumValue={40.0}
+          minimumTrackTintColor={'black'}
+          maximumTrackTintColor={'white'}
+          thumbTintColor={'black'}
+          onSlidingComplete = {function(value){
+            component.sliderStrokeUpdate(value)            
+          }}
+          onValueChange={function(value){
+            component.sliderStrokeUpdate(value)            
+          }}
+        />
+    )
+  }
+  sliderStrokeUpdate(value){
+    this.setState({stroke: Math.floor(value)})
+    this.sendStroke()
+  }
   renderColorPicks(){
     return(
       <View style={styles.colorPickMenu}>
@@ -329,19 +410,24 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   playgroundContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    /*justifyContent: 'center',*/
     alignItems: 'center',
-    backgroundColor: '#efefef'
+    backgroundColor: '#5894f3',
+    flexDirection: 'row',
   },
   playgroundLabel: {
     color: 'white',
     fontSize: 14,
-    backgroundColor: '#5894f3',
     fontWeight: 'bold',
-    marginBottom: 15,
+    marginLeft: 30,
     padding: 5,
-
+  },
+  playgroundLabelRight: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 5,
+    padding: 5,
   },
   playground: {
     marginTop: Screen.height <= 500 ? 10 : 20,
@@ -352,6 +438,17 @@ const styles = StyleSheet.create({
   },
   slider: {
     /*height: 40*/
-  }
+  },
+  headerTitle: {
+    marginLeft: 30,
+    color: 'white',
+    fontSize: 20
+  },
+  headerRight: {
+
+    marginLeft: 'auto',
+    color: 'white',
+    fontSize: 20
+  },
 
 });
