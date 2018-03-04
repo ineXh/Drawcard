@@ -33,8 +33,22 @@ function preload() {
 	imgZoomIn = loadImage("./../assets/zoomin.png");
 	imgZoomOut = loadImage("./../assets/zoomout.png");
 	//imgCircle = loadImage("./../assets/circle.png");
-	img = loadImage("./../assets/whole.png");
+	//img = loadImage("./../assets/whole.png");
 	//img = loadImage("./../assets/airport-photo.jpg");
+}
+
+var reload = function(input){
+  //centerText("reload", width/2, height/2);
+  //centerText(input, width/2, height*3/4);
+	side = Math.floor(64/parseInt(input));
+
+	background(255);
+	finishedSetup = false;
+	poop.length = 0;
+	poopList = {};
+	dominantHues = {};
+	buttons.length = 0;
+	draw();
 }
 
 function setup() {
@@ -62,7 +76,7 @@ function setup() {
 			"", imgZoomIn,
 			color(200)
 			);
-
+	// uncomment
 	sendMsg('getDataUrl', null, takeImage);
 	//
 	//width*0.9, height*0.9, width*0.04, width*0.04
@@ -139,6 +153,7 @@ function setupImage(img){
 		i++;
 		buttons.push(button)
 	}
+	// uncomment
 	sendMsg('giveColor', colors.toString(), null);
 
 	if(buttons.length >= 6) buttonTranslateX = (1-buttons[5].pos.x/width)/2 * width;

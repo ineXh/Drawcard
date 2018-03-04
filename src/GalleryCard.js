@@ -12,6 +12,7 @@ import {
   Button,
   ScrollView,
   View,
+  Slider,
   RefreshControl,
   Animated, TouchableOpacity
 } from 'react-native';
@@ -54,6 +55,7 @@ export default class GalleryCard extends Component {
       indexPhoto: null,
       showDrawButton: false,
       showSketch: false,
+      pixelSize: 4,
     };
   } // end constructor
 
@@ -92,11 +94,10 @@ export default class GalleryCard extends Component {
     
     this.myWebView.postMessage(JSON.stringify(msgData))
   }
-  onPress(name) {
-    //alert(`Button ${name} pressed`);
+  onPressReload() {
     let msgData = {};
-    msgData.targetFunc = "clearImage"
-    msgData.targetFuncData = "input data 101"
+    msgData.targetFunc = "reload"
+    msgData.targetFuncData = this.state.pixelSize;
     this.myWebView.postMessage(JSON.stringify(msgData))
   }
   showPress(name) {
@@ -278,23 +279,18 @@ export default class GalleryCard extends Component {
               <View style={styles.panelHeader}>
                 <View style={styles.panelHandle} />
               </View>
-              
-              <Text style={styles.panelTitle}>Slider</Text>
+
               {this.renderColorPicks()}
-              <View style={styles.panelButton}>
-                <TouchableOpacity onPress={this.onPress.bind(this, 'button1')}>
-                  <Text style={styles.panelButtonTitle}>Clear Image</Text>
-                </TouchableOpacity>
+              <View style={styles.playgroundContainer}>
+                  <Text style={styles.playgroundLabel}>Size</Text>
+                  {this.renderPixelSlider()}
+                  <Text style={styles.playgroundLabelRight}>{this.state.pixelSize}</Text>
               </View>
               <View style={styles.panelButton}>
-                <TouchableOpacity onPress={this.showPress.bind(this, 'button2')}>
-                  <Text style={styles.panelButtonTitle}>Show Image</Text>
+                <TouchableOpacity onPress={this.onPressReload.bind(this, 'button1')}>
+                  <Text style={styles.panelButtonTitle}>Reload Image</Text>
                 </TouchableOpacity>
               </View>
-              <Image
-                style={{width: 50, height: 50}}
-                source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
-              />
             </View>
           </Interactable.View>
         </View>
@@ -307,15 +303,18 @@ export default class GalleryCard extends Component {
       {
         this.state.colorPicks.map((d, index) =>{
               return(
-                  <Image style={{ margin: 5,
-                                  width: width/8,
-                                  height: width/8,
-                                  alignItems: 'center',
-                                  borderWidth: 3,
-                                  borderColor: 'black',
-                                  borderRadius: width/16,
-                                  tintColor: this.state.colorPicks[index]}} 
-                    key={index} source={circle} />
+                  <TouchableOpacity key={index} 
+                    onPress={this.onPressReload.bind(this, 'button1')}>
+                    <Image style={{ margin: 5,
+                                    width: width/8,
+                                    height: width/8,
+                                    alignItems: 'center',
+                                    borderWidth: 3,
+                                    borderColor: 'black',
+                                    borderRadius: width/16,
+                                    tintColor: this.state.colorPicks[index]}} 
+                       source={circle} />
+                  </TouchableOpacity>
                 )
             })
       }
@@ -344,6 +343,23 @@ export default class GalleryCard extends Component {
       }) // end photos.map
     );
     
+  }
+  renderPixelSlider(){
+    var component = this;
+    return(
+      <Slider
+          style={{ margin: 5,
+                  width: Screen.width/2}}
+          value={2}
+          minimumValue={1.0}
+          maximumValue={10.0}
+          minimumTrackTintColor={'black'}
+          maximumTrackTintColor={'white'}
+          thumbTintColor={'black'}
+          onSlidingComplete = {(value) => this.setState(
+            {pixelSize: Math.floor(value)})}          
+        />
+    )
   }
   renderPhotos(){
     return(
@@ -458,5 +474,25 @@ const styles = StyleSheet.create({
     /*
     
     alignContent: 'space-between'*/
-  }
+  },
+  playgroundContainer: {
+    /*justifyContent: 'center',*/
+    alignItems: 'center',
+    backgroundColor: '#5894f3',
+    flexDirection: 'row',
+  },
+  playgroundLabel: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 30,
+    padding: 5,
+  },
+  playgroundLabelRight: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 5,
+    padding: 5,
+  },
 });

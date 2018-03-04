@@ -109,6 +109,11 @@ export default class FreeSketchCard extends Component {
     msgData.targetFunc = "pressUndo"
     this.myWebView.postMessage(JSON.stringify(msgData))
   }
+  onPressRedo(){
+    let msgData = {};
+    msgData.targetFunc = "pressRedo"
+    this.myWebView.postMessage(JSON.stringify(msgData))
+  }
   onPressScreenshot(){
     let msgData = {};
     msgData.targetFunc = "screenshot"
@@ -159,62 +164,79 @@ export default class FreeSketchCard extends Component {
           style={{marginTop: 0}}
           onMessage={this.onWebViewMessage.bind(this)}/>
 
-          <View style={styles.panelContainer} pointerEvents={'box-none'}>
-            <Animated.View
-              pointerEvents={'box-none'}
-              style={[styles.panelContainer, {
-              backgroundColor: 'black',
-              opacity: this._deltaY.interpolate({
-                  inputRange: [0, Screen.height-10],
-                  outputRange: [0.5, 0],
-                  extrapolateRight: 'clamp'
-                })
-              }]} 
-            />
-
+        <View style={styles.panelContainer} pointerEvents={'box-none'}>
+          <Animated.View
+            pointerEvents={'box-none'}
+            style={[styles.panelContainer, {
+            backgroundColor: 'black',
+            opacity: this._deltaY.interpolate({
+                inputRange: [0, Screen.height-10],
+                outputRange: [0.5, 0],
+                extrapolateRight: 'clamp'
+              })
+            }]} 
+          />
             <Interactable.View
             verticalOnly={true}
             snapPoints={[{y: Screen.height/5}, {y: Screen.height-10}]}
             boundaries={{top: -300}}
             initialPosition={{y: Screen.height-10}}
             animatedValueY={this._deltaY}>
-            <View style={styles.panel}>
-              <View style={styles.panelHeader}>
-                <View style={styles.panelHandle} />
-              </View>
-              {/*this.renderColorPicks()*/}
-              <View style={styles.playgroundContainer}>
-                <Text style={styles.playgroundLabel}>Color</Text>
-                <Image style={{ marginLeft: 10,
-                                    width: Screen.width/15,
-                                    height: Screen.width/15,
-                                    alignItems: 'center',
-                                    borderWidth: 1,
-                                    borderColor: 'black',
-                                    borderRadius: Screen.width/18,
-                                    tintColor: this.state.color}} 
-                                    source={circle} />
-              </View>
-              
-                  {this.renderColorSlider(0)}
-                  {this.renderColorSlider(1)}
-                  {this.renderColorSlider(2)}
-              <View style={styles.playgroundContainer}>
-                <Text style={styles.playgroundLabel}>Stroke</Text>
-                {this.renderStrokeSlider(0)}
-                <Text style={styles.playgroundLabelRight}>{this.state.stroke}</Text>
-              </View>
-              <View style={styles.panelButton}>
-                <TouchableOpacity onPress={this.onPressNewDrawing.bind(this)}>
-                  <Text style={styles.panelButtonTitle}>New Drawing</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.panelButton}>
-                <TouchableOpacity onPress={this.onPressUndo.bind(this)}>
-                  <Text style={styles.panelButtonTitle}>Undo</Text>
-                </TouchableOpacity>
-              </View>
-
+              <View style={styles.panel}>
+                <View style={styles.panelHeader}>
+                  <View style={styles.panelHandle} />
+                </View>
+                {/*this.renderColorPicks()*/}
+                <View style={styles.playgroundContainer}>
+                  <Text style={styles.playgroundLabel}>Color</Text>
+                  <Image style={{ marginLeft: 10,
+                                      width: Screen.width/15,
+                                      height: Screen.width/15,
+                                      alignItems: 'center',
+                                      borderWidth: 1,
+                                      borderColor: 'black',
+                                      borderRadius: Screen.width/18,
+                                      tintColor: this.state.color}} 
+                                      source={circle} />
+                </View>              
+                {this.renderColorSlider(0)}
+                {this.renderColorSlider(1)}
+                {this.renderColorSlider(2)}
+                <View style={styles.playgroundContainer}>
+                  <Text style={styles.playgroundLabel}>Stroke</Text>
+                  {this.renderStrokeSlider(0)}
+                  <Text style={styles.playgroundLabelRight}>{this.state.stroke}</Text>
+                </View>
+                <View style={styles.panelButton}>
+                  <TouchableOpacity onPress={this.onPressNewDrawing.bind(this)}>
+                    <Text style={styles.panelButtonTitle}>New Drawing</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.playgroundContainer}>
+                  <Text style={styles.playgroundLabel}>Buttons</Text>
+                  <TouchableOpacity onPress={this.onPressUndo.bind(this)}>
+                    <Image style={{ marginLeft: 10,
+                                      width: Screen.width/10,
+                                      height: Screen.width/10,
+                                      alignItems: 'center',
+                                      borderWidth: 1,
+                                      borderColor: 'black',
+                                      borderRadius: Screen.width/18,
+                                      tintColor: this.state.color}} 
+                                      source={circle} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.onPressRedo.bind(this)}>
+                    <Image style={{ marginLeft: 10,
+                                      width: Screen.width/10,
+                                      height: Screen.width/10,
+                                      alignItems: 'center',
+                                      borderWidth: 1,
+                                      borderColor: 'black',
+                                      borderRadius: Screen.width/18,
+                                      tintColor: this.state.color}} 
+                                      source={circle} />
+                  </TouchableOpacity>
+                </View>
             </View>
           </Interactable.View>
 

@@ -1,7 +1,7 @@
 var testButton;
 var url;
 var dataURL = null;
-var screenShots = [];
+
 //var img = null;
 function exportImg(){
   centerText("exportImg", width/2, height/2);
@@ -12,6 +12,7 @@ function exportImg(){
   sendMsg(dataURL)
 }
 var clearImage = function(){
+  console.log('clearImage')
   //background(color(getRandomInt(0,255), getRandomInt(0,255), getRandomInt(0,255)));
   background(255);
 }
@@ -36,29 +37,41 @@ var changeStroke = function(input){
     strokeWeights.push(getRandomInt(2,3));
   }
 }
+var past = [];
+var future = [];
+var notSpliced = true;
+
 var pressUndo = function(){
+  //console.log('pressUndo')
   undoPressed = true
-  if(screenShots.length >= 2){
-    dataURL = screenShots[screenShots.length-2]
-    //screenShots.pop()
-  }else{
+
+  if(past.length == 0) return;
+  if(past.length == 1 && notSpliced){
     clearImage();
+    dataURL = null;
+    undoPressed = false;
+    future.push(past.pop());
+    return;
   }
+  future.push(past.pop());
+  dataURL = past[past.length-1];
 }
 var pressRedo = function(){
+  //console.log('pressRedo')
   redoPressed = true
-  if(screenShots.length >= 2){
-    dataURL = screenShots[screenShots.length-2]
-    //screenShots.pop()
-  }else{
-    clearImage();
-  }
+  if(future.length < 1) return;
+  dataURL = future.pop();
+  past.push(dataURL);
 }
 var screenshot = function(input){
   //centerText("screenshot", width/2, height/4);
   var canvas = document.getElementById('defaultCanvas0');
   URL = canvas.toDataURL('image/jpeg', 1.0);
-  screenShots.push(URL)
+  past.push(URL)
+  if(past.length > 5){
+    notSpliced = false;
+    past.splice(0, 1);
+  }
 }
 var sendMsg = function(data){
   centerText("send Msg", width/2, height/2);
@@ -82,16 +95,18 @@ function setup() {
 
   createCanvas(window.innerWidth, window.innerHeight);
   frameRate(fr);
+  imageMode(CENTER);
   refresh();
   clr = color(0, 0, 0);
   changeStroke(15);
   background(255);
 
+
 } // end setup
 
 function setupImage(data){
   //console.log('setupImage')
-  centerText("setupImage", width/2, height/2);
+  //centerText("setupImage", width/2, height/2);
   img = null;
   img = loadImage(data);
   //image(img, 0, 0, img.width, img.height);
@@ -103,10 +118,10 @@ var undoPressed = false;
 var redoPressed = false;
 function drawImage(){
   //console.log('drawImage')
-  centerText("drawImage", width/2, height*0.9);
+  //centerText("drawImage", width/2, height*0.9);
   drawn = true;
   //console.log(img.width)
-  image(img, 0, 0, width, height);
+  image(img, width/2, height/2, width, height);
   undoPressed = false;
   redoPressed = false;
 }
@@ -148,9 +163,10 @@ function mouseClicked() {
   if(!released){
     released = true;
     return;
-  } 
+  }
   //console.log('mouse clicked')
   clickCount++;
+  future.length = 0;
   //centerText("mouse clicked " + clickCount, width/2, height/2);
   //refresh();
   
@@ -201,7 +217,7 @@ function touchEnded(){
 }
 function mouseReleased() {
   //console.log('released')
-  centerText("mouse released " + clickCount, width/2, height/2);
+  //centerText("mouse released " + clickCount, width/2, height/2);
   screenshot();
   released = true;
   newTouch = true;
