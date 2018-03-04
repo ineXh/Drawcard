@@ -4,12 +4,10 @@ var dataURL = null;
 
 //var img = null;
 function exportImg(){
-  centerText("exportImg", width/2, height/2);
   var canvas = document.getElementById('defaultCanvas0');
-
   var dataURL = canvas.toDataURL('image/jpeg', 1.0);
-
-  sendMsg(dataURL)
+  sendMsg('receiveImage', dataURL, null);
+  centerText("exportImg", width/2, height/2);
 }
 var clearImage = function(){
   console.log('clearImage')
@@ -73,18 +71,17 @@ var screenshot = function(input){
     past.splice(0, 1);
   }
 }
-var sendMsg = function(data){
-  centerText("send Msg", width/2, height/2);
-    webViewBridge.send(
-        'sayHi',
-        {mydata: data}, //'test data'
-        function(){
-
-        },
-        function(){
-          //console.log('error')
-        });
-}
+var sendMsg = function(targetFunc, sendData, receiveCallback){
+  //centerText("send Msg", width/2, height*1/4);
+  webViewBridge.send(
+      targetFunc,
+      {mydata: sendData},
+      receiveCallback,
+      function(){
+        //console.log('error')
+      }
+  );
+} // end sendMsg
 function preload() {
   img = loadImage("./../assets/whole.png");
 }

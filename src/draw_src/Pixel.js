@@ -64,6 +64,7 @@ function setup() {
 	textSize(24);
 
 
+
 	buttonZoomOut = new Button();
 	buttonZoomOut.init(constants.ButtonType.Image,
 			width*0.72, height*0.85, width*0.06,
@@ -132,6 +133,7 @@ function setupImage(img){
 		colors.push(hue)
 		colors.push(dominantHues[hue].saturation/hueRange)
 		colors.push(dominantHues[hue].brightness/hueRange)
+
 		var button = new Button();
 		if(i < 6){
 			x = i*width*0.15
@@ -183,13 +185,15 @@ function draw(){
 			}
 	    pop();
 	pop();
+    /*
     push();
     	translate(buttonTranslateX, 0);
 		for (var i = 0; i < buttons.length; i++) {
 		    var B = buttons[i];
 		    B.display();
 		}
-	pop();
+	pop();*/
+
 	//text("" + Math.floor(mouseX) + ", " +
 	//	Math.floor(mouseY), width*0.8, height*0.95)
 	buttonZoomIn.display();
@@ -232,12 +236,13 @@ function colorButtonPress(buttonIndex){
 
 function mouseClicked() {
 	//console.log('mouseClicked')
+	/*
 	for (var i = 0; i < buttons.length; i++) {
 	    var button = buttons[i];
 	    if(button.pressed(mouseX - buttonTranslateX, mouseY)){
 	    	colorButtonPress(i)
 	    } // end button pressed
-	}
+	}*/
 	if(buttonZoomIn.pressed(mouseX, mouseY)){
 		getScreenCenter();
 		screenScale += 0.1;

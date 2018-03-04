@@ -38,16 +38,19 @@ let imageUrl = '';
 
 let galleryUrl = [
   './../assets/whole.png',
-  './../assets/10.png',
   './../assets/cow_emoji.png',
-  './../assets/hulk.jpg',
+  './../assets/heart.png',
+  //'./../assets/10.png',
+  //'./../assets/hulk.jpg',
 ]
 let galleryImages = [
   require('./../assets/whole.png'),
-  require('./../assets/10.png'),
   require('./../assets/cow_emoji.png'),
-  require('./../assets/hulk.jpg'),
+  require('./../assets/heart.png'),
+  //require('./../assets/10.png'),
+  //require('./../assets/hulk.jpg'),
 ];
+
 export default class GalleryCard extends Component {
   constructor(props) {
     super(props);
@@ -283,7 +286,7 @@ export default class GalleryCard extends Component {
           <Interactable.View
             verticalOnly={true}
             snapPoints={[ {y: Screen.height/4},
-                          {y: Screen.height*0.75},
+                          {y: Screen.height*0.725},
                           {y: Screen.height*0.475},
                           {y: Screen.height-10}]}
             boundaries={{top: -300}}

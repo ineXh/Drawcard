@@ -6,13 +6,16 @@ import {
   View,
   Image,
   WebView,
+  CameraRoll,
   Slider,
   Dimensions,
   Alert,
+  Platform,
   Animated, TouchableOpacity
 } from 'react-native';
 
 import Interactable from 'react-native-interactable';
+import RNFetchBlob from 'react-native-fetch-blob'
 
 const Screen = {
   width: Dimensions.get('window').width,
@@ -22,6 +25,8 @@ const circle = require('./../assets/circle.png')
 const iconNewFile = require('./../assets/icons8-file-26.png')
 const iconRedo = require('./../assets/icons8-redo-26.png')
 const iconUndo = require('./../assets/icons8-undo-26.png')
+const iconSave = require('./../assets/icons8-save-26.png')
+const iconErase = require('./../assets/icons8-erase-24.png')
 
 const colors = [
 //0  , 0  , 0  ,
@@ -119,6 +124,45 @@ export default class FreeSketchCard extends Component {
       ],
       { cancelable: false }
     )
+  }
+  onPressSave(){
+    var component = this;
+    Alert.alert(
+      'Save Image',
+      'Save the current drawing.',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'OK', onPress: function(){
+          let msgData = {};
+          msgData.targetFunc = "exportImg"
+          component.myWebView.postMessage(JSON.stringify(msgData))
+        }},
+      ],
+      { cancelable: false }
+    )
+  }
+  receiveImage(input){
+    var source = {uri: input.data.mydata};
+    this.saveToCameraRoll(source);
+    //this.state.drawings.push(source);
+  }
+  saveToCameraRoll = (image) => {
+    if (Platform.OS === 'android') {
+      RNFetchBlob
+      .config({
+        fileCache : true,
+        appendExt : 'jpg'
+      })
+      .fetch('GET', image)
+      .then((res) => {
+        CameraRoll.saveToCameraRoll(res.path())
+          .then(Alert.alert('Success', 'Photo added to camera roll!'))
+          .catch(err => console.log('err:', err))
+      })
+    } else {
+      CameraRoll.saveToCameraRoll(image)
+        .then(Alert.alert('Success', 'Photo added to camera roll!'))
+    }
   }
   onPressUndo(){
     let msgData = {};
@@ -251,6 +295,14 @@ export default class FreeSketchCard extends Component {
                                       height: Screen.width/12,
                                       alignItems: 'center'}}
                                       source={iconRedo} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.onPressSave.bind(this)}>
+                    <Image style={{   margin: 4,
+                                      marginLeft: 10,
+                                      width: Screen.width/12,
+                                      height: Screen.width/12,
+                                      alignItems: 'center'}}
+                                      source={iconSave} />
                   </TouchableOpacity>
                 </View>
             </View>
