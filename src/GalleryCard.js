@@ -29,6 +29,11 @@ const Screen = {
 }
 
 const circle = require('./../assets/circle.png')
+
+const iconZoomIn = require('./../assets/zoom-in.png')
+const iconZoomOut = require('./../assets/zoom-out.png')
+
+
 let imageUrl = '';
 
 let galleryUrl = [
@@ -59,7 +64,7 @@ export default class GalleryCard extends Component {
     };
   } // end constructor
 
-  
+
   setIndexGallery = (index) => {
     if (index === this.state.indexGallery) {
       index = null
@@ -86,18 +91,23 @@ export default class GalleryCard extends Component {
        console.warn(err);
        return;
     }
-      const response = this[msgData.targetFunc].apply(this, [msgData]);
-      msgData.args = [response];
-    
+    const response = this[msgData.targetFunc].apply(this, [msgData]);
+    msgData.args = [response];
     msgData.targetFunc = null;
     msgData.isSuccessful = true;
-    
+
     this.myWebView.postMessage(JSON.stringify(msgData))
   }
   onPressReload() {
     let msgData = {};
     msgData.targetFunc = "reload"
     msgData.targetFuncData = this.state.pixelSize;
+    this.myWebView.postMessage(JSON.stringify(msgData))
+  }
+  onPressColorPick(index){
+    let msgData = {};
+    msgData.targetFunc = "colorButtonPress"
+    msgData.targetFuncData = index;
     this.myWebView.postMessage(JSON.stringify(msgData))
   }
   showPress(name) {
@@ -111,7 +121,8 @@ export default class GalleryCard extends Component {
     console.log('Hi from DrawCard')
     return 'return from Hi'
   }
-  giveColor(input){
+  // Colors from webview to React
+  receiveColor(input){
     //console.log(input)
     //      colorPicks: ['hsl(180, 50%, 50%)','blue','red','blue'],
     var colors = input.data.mydata.split(",");
@@ -119,7 +130,7 @@ export default class GalleryCard extends Component {
     for(var i = 0; i < colors.length; i=i+3){
       colorPicks.push('hsl(' + colors[i] + ',' + colors[i+1]*100 + '%,' + colors[i+2]*100 + '%)')
     }
-    console.log(colorPicks)
+    //console.log(colorPicks)
     this.setState({colorPicks: colorPicks})
   }
   getDataUrl(){
@@ -188,7 +199,7 @@ export default class GalleryCard extends Component {
     }
     return (
       <View style={styles.container}>
-        <HeaderComponent input={{ header:'Gallery', 
+        <HeaderComponent input={{ header:'Gallery',
                                   headerRight: 'Select',
                                   onRightPress: this.onRightPress.bind(this)}}/>
         <ScrollView
@@ -303,8 +314,8 @@ export default class GalleryCard extends Component {
       {
         this.state.colorPicks.map((d, index) =>{
               return(
-                  <TouchableOpacity key={index} 
-                    onPress={this.onPressReload.bind(this, 'button1')}>
+                  <TouchableOpacity key={index}
+                    onPress={this.onPressColorPick.bind(this, index)}>
                     <Image style={{ margin: 5,
                                     width: width/8,
                                     height: width/8,
@@ -312,7 +323,7 @@ export default class GalleryCard extends Component {
                                     borderWidth: 3,
                                     borderColor: 'black',
                                     borderRadius: width/16,
-                                    tintColor: this.state.colorPicks[index]}} 
+                                    tintColor: this.state.colorPicks[index]}}
                        source={circle} />
                   </TouchableOpacity>
                 )
@@ -342,7 +353,7 @@ export default class GalleryCard extends Component {
         )
       }) // end photos.map
     );
-    
+
   }
   renderPixelSlider(){
     var component = this;
@@ -357,7 +368,7 @@ export default class GalleryCard extends Component {
           maximumTrackTintColor={'white'}
           thumbTintColor={'black'}
           onSlidingComplete = {(value) => this.setState(
-            {pixelSize: Math.floor(value)})}          
+            {pixelSize: Math.floor(value)})}
         />
     )
   }
@@ -472,7 +483,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     /*
-    
+
     alignContent: 'space-between'*/
   },
   playgroundContainer: {

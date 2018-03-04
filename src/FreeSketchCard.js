@@ -18,6 +18,10 @@ const Screen = {
   height: Dimensions.get('window').height-50
 }
 const circle = require('./../assets/circle.png')
+const iconNewFile = require('./../assets/icons8-file-26.png')
+const iconRedo = require('./../assets/icons8-redo-26.png')
+const iconUndo = require('./../assets/icons8-undo-26.png')
+
 const colors = [
 //0  , 0  , 0  ,
 255, 0  , 0  ,
@@ -85,7 +89,7 @@ export default class FreeSketchCard extends Component {
     this.setState({colorPicks: colorPicks})
   }
   sendColor(){
-    this.setState({color: 'rgb(' + 
+    this.setState({color: 'rgb(' +
       this.state.red + ', ' + this.state.green + ', ' + this.state.blue + ')'})
     let msgData = {};
     msgData.targetFunc = "changeColor"
@@ -100,9 +104,20 @@ export default class FreeSketchCard extends Component {
   }
   onPressNewDrawing(name) {
     //alert(`Button ${name} pressed`);
-    let msgData = {};
-    msgData.targetFunc = "clearImage"
-    this.myWebView.postMessage(JSON.stringify(msgData))
+    var component = this;
+    Alert.alert(
+      'Start Over',
+      'Clear the current drawing.',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'OK', onPress: function(){
+          let msgData = {};
+          msgData.targetFunc = "clearImage"
+          component.myWebView.postMessage(JSON.stringify(msgData))
+        }},
+      ],
+      { cancelable: false }
+    )
   }
   onPressUndo(){
     let msgData = {};
@@ -174,7 +189,7 @@ export default class FreeSketchCard extends Component {
                 outputRange: [0.5, 0],
                 extrapolateRight: 'clamp'
               })
-            }]} 
+            }]}
           />
             <Interactable.View
             verticalOnly={true}
@@ -196,9 +211,9 @@ export default class FreeSketchCard extends Component {
                                       borderWidth: 1,
                                       borderColor: 'black',
                                       borderRadius: Screen.width/18,
-                                      tintColor: this.state.color}} 
+                                      tintColor: this.state.color}}
                                       source={circle} />
-                </View>              
+                </View>
                 {this.renderColorSlider(0)}
                 {this.renderColorSlider(1)}
                 {this.renderColorSlider(2)}
@@ -207,13 +222,20 @@ export default class FreeSketchCard extends Component {
                   {this.renderStrokeSlider(0)}
                   <Text style={styles.playgroundLabelRight}>{this.state.stroke}</Text>
                 </View>
-                <View style={styles.panelButton}>
-                  <TouchableOpacity onPress={this.onPressNewDrawing.bind(this)}>
-                    <Text style={styles.panelButtonTitle}>New Drawing</Text>
-                  </TouchableOpacity>
-                </View>
+
                 <View style={styles.playgroundContainer}>
                   <Text style={styles.playgroundLabel}>Buttons</Text>
+                  <TouchableOpacity onPress={this.onPressNewDrawing.bind(this)}>
+                    <Image style={{ marginLeft: 10,
+                                      width: Screen.width/10,
+                                      height: Screen.width/10,
+                                      alignItems: 'center',
+                                      borderWidth: 1,
+                                      borderColor: 'black',
+                                      borderRadius: Screen.width/18,
+                                      tintColor: this.state.color}}
+                                      source={iconNewFile} />
+                  </TouchableOpacity>
                   <TouchableOpacity onPress={this.onPressUndo.bind(this)}>
                     <Image style={{ marginLeft: 10,
                                       width: Screen.width/10,
@@ -222,8 +244,8 @@ export default class FreeSketchCard extends Component {
                                       borderWidth: 1,
                                       borderColor: 'black',
                                       borderRadius: Screen.width/18,
-                                      tintColor: this.state.color}} 
-                                      source={circle} />
+                                      tintColor: this.state.color}}
+                                      source={iconUndo} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={this.onPressRedo.bind(this)}>
                     <Image style={{ marginLeft: 10,
@@ -233,8 +255,8 @@ export default class FreeSketchCard extends Component {
                                       borderWidth: 1,
                                       borderColor: 'black',
                                       borderRadius: Screen.width/18,
-                                      tintColor: this.state.color}} 
-                                      source={circle} />
+                                      tintColor: this.state.color}}
+                                      source={iconRedo} />
                   </TouchableOpacity>
                 </View>
             </View>
@@ -284,10 +306,10 @@ export default class FreeSketchCard extends Component {
           maximumTrackTintColor={colorString}
           thumbTintColor={color}
           onSlidingComplete = {function(value){
-            component.sliderColorUpdate(color, value)            
+            component.sliderColorUpdate(color, value)
           }}
           onValueChange={function(value){
-            component.sliderColorUpdate(color, value)            
+            component.sliderColorUpdate(color, value)
           }}
         />
     )
@@ -312,10 +334,10 @@ export default class FreeSketchCard extends Component {
           maximumTrackTintColor={'white'}
           thumbTintColor={'black'}
           onSlidingComplete = {function(value){
-            component.sliderStrokeUpdate(value)            
+            component.sliderStrokeUpdate(value)
           }}
           onValueChange={function(value){
-            component.sliderStrokeUpdate(value)            
+            component.sliderStrokeUpdate(value)
           }}
         />
     )
@@ -337,7 +359,7 @@ export default class FreeSketchCard extends Component {
                                   borderWidth: 1,
                                   borderColor: 'black',
                                   borderRadius: Screen.width/16,
-                                  tintColor: this.state.colorPicks[index]}} 
+                                  tintColor: this.state.colorPicks[index]}}
                     key={index} source={circle} />
                 )
             })
@@ -349,9 +371,9 @@ export default class FreeSketchCard extends Component {
 
 /*
 
-          
-        
-        
+
+
+
 */
 
 

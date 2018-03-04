@@ -63,7 +63,7 @@ function setup() {
 	noStroke();
 	textSize(24);
 
-	
+
 	buttonZoomOut = new Button();
 	buttonZoomOut.init(constants.ButtonType.Image,
 			width*0.72, height*0.85, width*0.06,
@@ -154,7 +154,7 @@ function setupImage(img){
 		buttons.push(button)
 	}
 	// uncomment
-	sendMsg('giveColor', colors.toString(), null);
+	sendMsg('receiveColor', colors.toString(), null);
 
 	if(buttons.length >= 6) buttonTranslateX = (1-buttons[5].pos.x/width)/2 * width;
 	else buttonTranslateX = (1-buttons[buttons.length-1].pos.x/width)/2 * width;
@@ -206,31 +206,36 @@ function touchStarted(){
 	//console.log('screenCurrentTranslateX ' + screenCurrentTranslateX)
   //mouseClicked()
 }
+function colorButtonPress(buttonIndex){
+	//console.log(button)
+	//console.log('pressed ' + i)
+	var button = buttons[parseInt(buttonIndex)];
+	var hue = button.hue;
+	//var hue = Object.keys(dominantHues)[i];
+	//if(dominantHues[hue] == undefined) debugger;
+	if(dominantHues[hue].indices == undefined &&
+		dominantHues[hue].diffBrightnessIndices == undefined) return;
+	if(dominantHues[hue].indices != undefined){
+		for(var k = 0; k < dominantHues[hue].indices.length; k++){
+			index = dominantHues[hue].indices[k]
+			poop[index].hide = !poop[index].hide;
+		}
+	}
+	if(dominantHues[hue].diffBrightnessIndices != undefined){
+		for(var k = 0; k < dominantHues[hue].diffBrightnessIndices.length; k++){
+			index = dominantHues[hue].diffBrightnessIndices[k]
+			poop[index].hide = !poop[index].hide;
+		}
+	}
+	draw();
+} // end colorButtonPress
+
 function mouseClicked() {
 	//console.log('mouseClicked')
 	for (var i = 0; i < buttons.length; i++) {
 	    var button = buttons[i];
 	    if(button.pressed(mouseX - buttonTranslateX, mouseY)){
-	    	//console.log(button)
-	    	//console.log('pressed ' + i)
-	    	var hue = button.hue;
-	    	//var hue = Object.keys(dominantHues)[i];
-	    	//if(dominantHues[hue] == undefined) debugger;
-	    	if(dominantHues[hue].indices == undefined &&
-	    		dominantHues[hue].diffBrightnessIndices == undefined) continue;
-	    	if(dominantHues[hue].indices != undefined){
-	    		for(var k = 0; k < dominantHues[hue].indices.length; k++){
-		    		index = dominantHues[hue].indices[k]
-		    		poop[index].hide = !poop[index].hide;
-		    	}
-	    	}
-	    	if(dominantHues[hue].diffBrightnessIndices != undefined){
-	    		for(var k = 0; k < dominantHues[hue].diffBrightnessIndices.length; k++){
-		    		index = dominantHues[hue].diffBrightnessIndices[k]
-		    		poop[index].hide = !poop[index].hide;
-		    	}
-	    	}
-	    	draw();
+	    	colorButtonPress(i)
 	    } // end button pressed
 	}
 	if(buttonZoomIn.pressed(mouseX, mouseY)){
@@ -269,7 +274,7 @@ function mouseDragged() {
 
 	if(screenTotalTranslateY < (-img.height+side/2)*screenScale)
 		screenCurrentTranslateY = (-img.height+side/2)*screenScale - screenInitialTranslateY;
-	
+
 	if(screenTotalTranslateY > (height-side*screenScale)) //+(img.height+side*2)*0*screenScale)
 		screenCurrentTranslateY = (height-side*screenScale) - screenInitialTranslateY;
 	screenTotalTranslateY = screenInitialTranslateY + screenCurrentTranslateY;
