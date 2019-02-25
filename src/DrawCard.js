@@ -27,7 +27,7 @@ export default class DrawCard extends Component {
     super(props);
     this._deltaY = new Animated.Value(Screen.height-100);
     this.state = {
-      number: myvar, 
+      number: myvar,
       showImg: false,
       img: airport,
       photos: [],
@@ -79,7 +79,7 @@ export default class DrawCard extends Component {
        //return;
        // post back reply as soon as possible to enable sending the next message
        this.myWebView.postMessage(event.nativeEvent.data);
- 
+
        let msgData;
        try {
            msgData = JSON.parse(event.nativeEvent.data);
@@ -88,7 +88,7 @@ export default class DrawCard extends Component {
            console.warn(err);
            return;
        }
-      
+
        // invoke target function
        //console.log(msgData.data)
        //console.log(msgData.targetFunc)
@@ -114,7 +114,7 @@ export default class DrawCard extends Component {
         <WebView
           style={{flex: 1}}
           ref={webview => { this.myWebView = webview; }}
-          source={require('./draw.html')}
+          source={require('./FreeSketch.html')}
           //source= {{html: HTMLC}}
           injectedJavaScript={code}
           javaScriptEnabled={true}
@@ -122,7 +122,7 @@ export default class DrawCard extends Component {
           scrollEnabled={false}
           style={{marginTop: 0}}
           onMessage={this.onWebViewMessage.bind(this)}/>
-        
+
         <View style={styles.panelContainer} pointerEvents={'box-none'}>
           <Animated.View
             pointerEvents={'box-none'}
@@ -136,9 +136,9 @@ export default class DrawCard extends Component {
           }]} />
           <Interactable.View
             verticalOnly={true}
-            snapPoints={[{y: Screen.height/4}, {y: Screen.height-25}]}
+            snapPoints={[{y: Screen.height/4}, {y: Screen.height-100}]}
             boundaries={{top: -300}}
-            initialPosition={{y: Screen.height-25}}
+            initialPosition={{y: Screen.height-100}}
             animatedValueY={this._deltaY}>
             <View style={styles.panel}>
               <View style={styles.panelHeader}>
@@ -186,14 +186,14 @@ export default class DrawCard extends Component {
       //console.log(d)
       return(
           <Image style={styles.photo} source={img} />
-          
+
         )
     //})
   }
 }
 /*
         */
-// {this.renderDrawings()}   
+// {this.renderDrawings()}
 // <Image style={styles.photo} key={index} source={d} />
 
 const styles = StyleSheet.create({

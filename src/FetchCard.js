@@ -18,7 +18,7 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'react-native-fetch-blob'
 const { width } = Dimensions.get('window')
 
-export default class IntroCard extends Component {
+export default class FetchCard extends Component {
   state = {
     modalVisible: false,
     photos: [],
