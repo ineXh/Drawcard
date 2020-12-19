@@ -220,3 +220,9 @@ function mouseReleased() {
   released = true;
   newTouch = true;
 }
+
+function keyPressed() {
+  if(key == 'Z') pressUndo()
+    if(key == 'X') pressRedo()
+      // if(key == 'q') screenshot()
+}

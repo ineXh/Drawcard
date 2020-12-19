@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "server8000": "python -m SimpleHTTPServer 8000",
-    "server8001": "python -m SimpleHTTPServer 8001"
+    "server8000": "python -m http.server 8000",
+    "server8001": "python -m http.server 8001"
   },
   "dependencies": {
     "install": "^0.10.4",
